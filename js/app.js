@@ -4,6 +4,20 @@ window.Hydralia = (function () {
   const EVENTS_KEY = "hydralia_events_v1";
   const REMINDERS_KEY = "hydralia_reminders_v1";
 
+  function userSuffix() {
+    const A = window.HydraliaAuth;
+    const id = A && A.getUserId && A.getUserId();
+    return id ? "_" + id : "";
+  }
+
+  function storageKey(base) {
+    return base + userSuffix();
+  }
+
+  function demoVersionKey() {
+    return "hydralia_demo_version" + userSuffix();
+  }
+
   const HERO_TIPS = [
     "Las plantas respiran mejor si limpias sus hojas con un paño húmedo una vez al mes.",
     "Riega por la mañana para que el exceso de humedad se evapore durante el día.",
@@ -56,51 +70,71 @@ window.Hydralia = (function () {
 
   function loadPlants() {
     try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      return JSON.parse(localStorage.getItem(storageKey(STORAGE_KEY)) || "[]");
     } catch (e) {
       return [];
     }
   }
 
   function savePlants(list) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    localStorage.setItem(storageKey(STORAGE_KEY), JSON.stringify(list));
     window.dispatchEvent(new Event("hydralia:updated"));
   }
 
   function loadEvents() {
     try {
-      return JSON.parse(localStorage.getItem(EVENTS_KEY) || "[]");
+      return JSON.parse(localStorage.getItem(storageKey(EVENTS_KEY)) || "[]");
     } catch (e) {
       return [];
     }
   }
 
   function saveEvents(list) {
-    localStorage.setItem(EVENTS_KEY, JSON.stringify(list));
+    localStorage.setItem(storageKey(EVENTS_KEY), JSON.stringify(list));
     window.dispatchEvent(new Event("hydralia:updated"));
   }
 
   function loadReminders() {
     try {
-      return JSON.parse(localStorage.getItem(REMINDERS_KEY) || "[]");
+      return JSON.parse(localStorage.getItem(storageKey(REMINDERS_KEY)) || "[]");
     } catch (e) {
       return [];
     }
   }
 
   function saveReminders(list) {
-    localStorage.setItem(REMINDERS_KEY, JSON.stringify(list));
+    localStorage.setItem(storageKey(REMINDERS_KEY), JSON.stringify(list));
     window.dispatchEvent(new Event("hydralia:updated"));
   }
 
   const DEMO_VERSION = "6";
 
   function ensureSampleData() {
-    if (localStorage.getItem("hydralia_demo_version") !== DEMO_VERSION) {
-      localStorage.removeItem(STORAGE_KEY);
-      localStorage.removeItem(EVENTS_KEY);
-      localStorage.removeItem(REMINDERS_KEY);
-      localStorage.setItem("hydralia_demo_version", DEMO_VERSION);
+    const versionKey = demoVersionKey();
+    const plantsKey = storageKey(STORAGE_KEY);
+    const eventsKey = storageKey(EVENTS_KEY);
+    const remindersKey = storageKey(REMINDERS_KEY);
+
+    if (
+      window.HydraliaAuth &&
+      HydraliaAuth.getUserId() === "user_demo" &&
+      !localStorage.getItem(plantsKey) &&
+      localStorage.getItem(STORAGE_KEY)
+    ) {
+      localStorage.setItem(plantsKey, localStorage.getItem(STORAGE_KEY));
+      if (localStorage.getItem(EVENTS_KEY)) {
+        localStorage.setItem(eventsKey, localStorage.getItem(EVENTS_KEY));
+      }
+      if (localStorage.getItem(REMINDERS_KEY)) {
+        localStorage.setItem(remindersKey, localStorage.getItem(REMINDERS_KEY));
+      }
+    }
+
+    if (localStorage.getItem(versionKey) !== DEMO_VERSION) {
+      localStorage.removeItem(plantsKey);
+      localStorage.removeItem(eventsKey);
+      localStorage.removeItem(remindersKey);
+      localStorage.setItem(versionKey, DEMO_VERSION);
     }
     const existing = loadPlants();
     if (existing.length) return;
@@ -346,7 +380,7 @@ window.Hydralia = (function () {
       { id: uid("ev_"), plantId: "sample_1", type: "evento", date: daysAgo(-1), title: "Revisión mensual" },
       { id: uid("ev_"), plantId: "sample_4", type: "maceta", date: daysAgo(-15), title: "Trasplante Sansevieria" },
     ];
-    localStorage.setItem(EVENTS_KEY, JSON.stringify(events));
+    localStorage.setItem(storageKey(EVENTS_KEY), JSON.stringify(events));
 
     const reminders = [
       {
@@ -399,7 +433,7 @@ window.Hydralia = (function () {
         message: "Podar Lavanda tras floración",
       },
     ];
-    localStorage.setItem(REMINDERS_KEY, JSON.stringify(reminders));
+    localStorage.setItem(storageKey(REMINDERS_KEY), JSON.stringify(reminders));
   }
 
   function computeAvgRiegoDays(p) {

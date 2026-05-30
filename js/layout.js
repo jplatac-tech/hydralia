@@ -50,6 +50,17 @@ window.HydraliaLayout = (function () {
       )
       .join("");
 
+    const session = window.HydraliaAuth && HydraliaAuth.getSession();
+    const userLabel = session ? session.name.split(" ")[0] : "";
+    const userBlock = session
+      ? `<a href="perfil.html" class="navbar-user-pill mr-1 d-none d-md-inline-flex" title="${session.name}">👤 ${userLabel}</a>
+         <button type="button" class="btn btn-sm btn-outline-secondary navbar-logout-btn btn-logout mr-1" title="Cerrar sesión">Salir</button>`
+      : "";
+
+    const mobileLogout = session
+      ? `<button type="button" class="nav-link nav-link-mobile nav-link-logout btn-logout">🚪 Cerrar sesión</button>`
+      : "";
+
     return `
     <div class="hydralia-navbar-wrap">
     <div class="container-fluid p-0">
@@ -59,7 +70,8 @@ window.HydraliaLayout = (function () {
             <img src="img/hydralia-logo-nav.png?v=5" alt="Hydralia" class="brand-logo" width="564" height="159" />
           </a>
           <div class="navbar-toolbar ml-auto d-flex align-items-center">
-            <button type="button" id="btnToggleDark" class="btn btn-sm btn-outline-secondary navbar-dark-btn" title="Modo oscuro" aria-label="Cambiar modo oscuro">🌙</button>
+            ${userBlock}
+            <button type="button" id="btnToggleDark" class="btn btn-sm btn-outline-secondary navbar-dark-btn${userBlock ? " ml-2" : ""}" title="Modo oscuro" aria-label="Cambiar modo oscuro">🌙</button>
             <button type="button" class="navbar-toggler ml-2" data-toggle="collapse" data-target="#navbarCollapse" aria-label="Abrir menú">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -75,6 +87,7 @@ window.HydraliaLayout = (function () {
               </div>
             </div>
             <div class="navbar-nav-mobile">
+              ${mobileLogout}
               ${mobileMenuLinks}
             </div>
           </div>

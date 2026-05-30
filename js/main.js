@@ -14,12 +14,35 @@
 })(jQuery);
 
 (function () {
+  "use strict";
+
+  const page = document.body.dataset.page || "inicio";
+  const isAuthPage = page === "login" || page === "registro";
+
+  if (window.HydraliaAuth) {
+    HydraliaAuth.ensureDemoUser();
+    if (isAuthPage) {
+      if (HydraliaAuth.isLoggedIn()) {
+        location.href = "index.html";
+        return;
+      }
+      HydraliaAuth.initAuthPage(page);
+      return;
+    }
+    if (!HydraliaAuth.isLoggedIn()) {
+      const redirect = encodeURIComponent(
+        (location.pathname.split("/").pop() || "index.html") + location.search,
+      );
+      location.href = "login.html?redirect=" + redirect;
+      return;
+    }
+  }
+
   const H = window.Hydralia;
   if (!H) return;
 
   H.ensureSampleData();
 
-  const page = document.body.dataset.page || "inicio";
   if (window.HydraliaLayout) HydraliaLayout.initNav(page);
 
   /* ── Modo oscuro ── */
@@ -758,6 +781,11 @@
       });
   }
 
+  $(document).on("click", ".btn-logout", function () {
+    if (window.HydraliaAuth) HydraliaAuth.logout();
+    location.href = "login.html";
+  });
+
   $(document).on("click", ".reminder-done", function () {
     const id = $(this).data("id");
     $(this).closest(".card").addClass("task-done");
@@ -1085,6 +1113,14 @@
     },
 
     perfil: function () {
+      const user = window.HydraliaAuth && HydraliaAuth.getCurrentUser();
+      const session = window.HydraliaAuth && HydraliaAuth.getSession();
+      if (user && session) {
+        $(".profile-avatar").text(session.name.charAt(0).toUpperCase());
+        $(".profile-hero h2").text(session.name);
+        $(".profile-hero .text-muted").first().text(session.email);
+      }
+
       const plants = H.loadPlants();
       const insights = H.computeHomeInsights(plants);
       $("#profile-insights").html(`

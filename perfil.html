@@ -14,10 +14,17 @@
   <div class="container py-4">
     <div class="profile-hero hydralia-card mb-4">
       <div class="profile-avatar">🌿</div>
-      <div>
+      <div class="flex-grow-1">
         <h2 class="mb-1">Tu jardín Hydralia</h2>
-        <p class="text-muted mb-0">Resumen de tu actividad de cuidado</p>
+        <p class="text-muted mb-2">Resumen de tu actividad de cuidado</p>
+        <div class="profile-account-actions">
+          <button type="button" class="btn btn-sm btn-outline-secondary btn-logout">Cerrar sesión</button>
+        </div>
       </div>
+    </div>
+    <div class="auth-demo-notice auth-demo-notice--inline mb-4">
+      <strong>Cuenta de demostración</strong>
+      <p class="mb-0 small">Tus datos de plantas están guardados solo en este navegador, vinculados a tu sesión.</p>
     </div>
     <div class="row mb-4" id="profile-insights"></div>
     <div class="row">
@@ -39,6 +46,7 @@
   </div>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/main.js"></script>
