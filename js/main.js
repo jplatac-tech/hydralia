@@ -171,7 +171,6 @@
       return;
     }
     const shown = plants.slice(0, limit);
-    const extra = plants.length - shown.length;
     let html = '<div class="plant-chip-list">';
     shown.forEach((p) => {
       const happy = H.computeHappiness(p).score;
@@ -183,9 +182,6 @@
         </a>`;
     });
     html += "</div>";
-    if (extra > 0) {
-      html += `<p class="text-muted small mt-2 mb-0">y ${extra} planta${extra > 1 ? "s" : ""} más</p>`;
-    }
     $el.html(html);
   }
 
@@ -690,6 +686,48 @@
     }
   }
 
+  function renderAchievementsPreview($el, limit) {
+    limit = limit || 2;
+    if (!$el.length) return;
+    const plants = H.loadPlants();
+    $el.empty();
+    H.computeAchievements(plants)
+      .filter((a) => a.unlocked)
+      .slice(0, limit)
+      .forEach((a) => {
+        $el.append(`
+          <div class="achievement-item unlocked mb-2">
+            <span class="achievement-icon">${a.icon}</span>
+            <div><strong>${a.title}</strong><br><small class="text-muted">${a.desc}</small></div>
+          </div>`);
+      });
+    if (!$el.children().length) {
+      $el.html('<p class="text-muted small mb-0">Aún no hay logros desbloqueados.</p>');
+    }
+  }
+
+  function renderRemindersPreview($el, limit) {
+    limit = limit || 2;
+    if (!$el.length) return;
+    const plants = H.loadPlants();
+    const reminders = H.loadReminders().sort((a, b) => new Date(a.date) - new Date(b.date));
+    $el.empty();
+    if (!reminders.length) {
+      $el.html('<p class="text-muted small mb-0">No hay recordatorios pendientes.</p>');
+      return;
+    }
+    const icons = { riego: "💧", fertilizacion: "🌱", poda: "✂️", maceta: "🪴", tratamiento: "💊" };
+    reminders.slice(0, limit).forEach((rem) => {
+      const plant = plants.find((p) => p.id === rem.plantId);
+      const name = plant ? plant.name : "Planta";
+      $el.append(`
+        <p class="mb-2 small">
+          <strong>${icons[rem.type] || "🔔"} ${rem.message || rem.type}</strong><br>
+          <span class="text-muted">${name} · ${H.formatDateTime(rem.date)}</span>
+        </p>`);
+    });
+  }
+
   /* ── Recordatorios ── */
   function renderReminders() {
     const $r = $("#reminders-list");
@@ -743,40 +781,10 @@
 
     dashboard: function () {
       renderStats();
-      const insights = H.computeHomeInsights(H.loadPlants());
-      $("#dashboard-dynamic-msg").html(`<p class="mb-0">${insights.bannerMessage}</p>`);
-      renderHomePlantChips($("#dashboard-plants"), 3);
-      const plants = H.loadPlants();
-      const $ach = $("#achievements-preview");
-      if ($ach.length) {
-        $ach.empty();
-        H.computeAchievements(plants).forEach((a) => {
-          $ach.append(`
-            <div class="achievement-item ${a.unlocked ? "unlocked" : "locked"}">
-              <span class="achievement-icon">${a.icon}</span>
-              <div><strong>${a.title}</strong><br><small>${a.desc}</small></div>
-            </div>`);
-        });
-      }
-      const $hist = $("#recent-history");
-      if ($hist.length) {
-        $hist.empty();
-        const events = [];
-        plants.forEach((p) =>
-          (p.history || []).forEach((h) =>
-            events.push({ plant: p.name, when: h.date, notes: h.notes }),
-          ),
-        );
-        events.sort((a, b) => new Date(b.when) - new Date(a.when));
-        if (!events.length) $hist.html('<p class="text-muted">Sin eventos.</p>');
-        else
-          events.slice(0, 8).forEach((ev) =>
-            $hist.append(`<div class="mb-2"><strong>${ev.plant}</strong> — Riego · ${H.formatDateTime(ev.when)}<br><small class="text-muted">${ev.notes || ""}</small></div>`),
-          );
-      }
+      renderAchievementsPreview($("#achievements-preview"), 2);
+      renderRemindersPreview($("#reminders-preview"), 2);
       initCharts();
       updateCharts();
-      renderReminders();
     },
 
     riego: function () {
