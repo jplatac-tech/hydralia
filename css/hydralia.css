@@ -38,7 +38,7 @@
 }
 
 .hero-home {
-  min-height: 280px;
+  min-height: clamp(420px, 52vh, 580px);
   display: flex;
   align-items: center;
   background: linear-gradient(135deg, var(--sage) 0%, #a8c49a 50%, #c5ddb8 100%);
@@ -93,6 +93,8 @@
 .hero-home .container {
   position: relative;
   z-index: 1;
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
 }
 
 .hero-eyebrow {
@@ -1863,12 +1865,12 @@ body {
 
   /* Hero portada */
   .hero-home {
-    min-height: 220px;
+    min-height: clamp(320px, 44vh, 440px);
   }
 
   .hero-home .container {
-    padding-top: 1.75rem !important;
-    padding-bottom: 1.75rem !important;
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
   }
 
   .hero-title {
