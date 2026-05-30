@@ -32,11 +32,7 @@
       window.dispatchEvent(new Event("hydralia:theme-changed"));
     }
     const saved = localStorage.getItem(KEY);
-    const isDark =
-      saved === "1" ||
-      (saved === null &&
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches);
+    const isDark = saved === "1";
     applyMode(isDark);
     document.addEventListener("click", function (e) {
       if (e.target && e.target.id === "btnToggleDark") {
