@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Hydralia — Recordatorios</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/hydralia.css" rel="stylesheet">
+</head>
+<body data-page="recordatorios">
+  <div id="hydralia-topnav"></div>
+  <div class="container py-4">
+    <div class="app-layout">
+      <aside class="app-sidebar"><nav class="nav flex-column" id="hydralia-sidebar"></nav></aside>
+      <main class="app-main">
+        <h2 class="mb-1">Recordatorios y notificaciones</h2>
+        <p class="text-muted mb-4">Programa alertas de riego, fertilización, poda, cambio de maceta y tratamientos.</p>
+        <div class="row">
+          <div class="col-lg-7 mb-4">
+            <div id="reminders-list"></div>
+          </div>
+          <div class="col-lg-5">
+            <div class="card hydralia-card p-4">
+              <h5>Nuevo recordatorio</h5>
+              <form id="formAddReminder">
+                <div class="form-group">
+                  <label>Planta</label>
+                  <select name="plantId" id="reminder-plant" class="form-control" required></select>
+                </div>
+                <div class="form-group">
+                  <label>Tipo</label>
+                  <select name="type" class="form-control">
+                    <option value="riego">Riego</option>
+                    <option value="fertilizacion">Fertilización</option>
+                    <option value="poda">Poda</option>
+                    <option value="maceta">Cambio de maceta</option>
+                    <option value="tratamiento">Tratamiento</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Fecha</label>
+                  <input name="date" type="datetime-local" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label>Mensaje</label>
+                  <input name="message" class="form-control" placeholder="Ej. Regar Potus" required />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Crear recordatorio</button>
+              </form>
+              <p class="small text-muted mt-3 mb-0">Las notificaciones pueden enviarse por correo o mostrarse en la plataforma.</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

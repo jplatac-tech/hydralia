@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Hydralia — Diario inteligente para plantas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/hydralia.css" rel="stylesheet">
+</head>
+<body data-page="inicio">
+
+  <div id="hydralia-topnav"></div>
+
+  <!-- Hero -->
+  <section class="hero-home hero-home--photo" style="background-image:url('img/plantas.jpg?v=2')">
+    <div class="container py-5 text-center">
+      <h6 class="text-uppercase hero-eyebrow" style="letter-spacing:4px">Diario Inteligente</h6>
+      <h1 class="hero-title mb-3">Cuida tus plantas con inteligencia</h1>
+      <p class="lead mx-auto hero-subtitle mb-4" style="max-width:560px">Registra tus plantas, controla riegos y recibe recomendaciones personalizadas.</p>
+      <div>
+        <a href="plantas.html" class="btn btn-light mr-2">Ver mis plantas</a>
+        <a href="dashboard.html" class="btn btn-primary">Ir al panel</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Consejo del día -->
+  <div class="container home-tip-section py-4">
+    <div class="tip-showcase hydralia-card">
+      <div class="tip-showcase-inner">
+        <div class="tip-showcase-icon">🌿</div>
+        <div class="tip-showcase-body">
+          <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
+            <span class="tip-showcase-label">Consejo del día</span>
+            <span class="tip-showcase-counter" id="tip-counter">1 / 10</span>
+          </div>
+          <p id="rotating-tip" class="tip-showcase-text mb-2">
+            Las plantas respiran mejor si limpias sus hojas con un paño húmedo una vez al mes.
+          </p>
+          <div class="d-flex justify-content-between align-items-center flex-wrap mt-2">
+            <div id="tip-dots" class="tip-dots"></div>
+            <div class="tip-showcase-nav">
+              <button type="button" class="btn btn-sm btn-outline-secondary" id="tip-prev" aria-label="Consejo anterior">←</button>
+              <button type="button" class="btn btn-sm btn-outline-primary" id="tip-next" aria-label="Siguiente consejo">→</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats rápidos -->
+  <div class="container pb-4">
+    <div class="row" id="quick-stats">
+      <div class="col-md-3 mb-3">
+        <div class="card hydralia-card stat-card"><h6>Plantas</h6><h2 id="stat-plants">0</h2></div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card hydralia-card stat-card"><h6>Saludables</h6><h2 id="stat-healthy">0</h2></div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card hydralia-card stat-card"><h6>Requieren atención</h6><h2 id="stat-attention">0</h2></div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card hydralia-card stat-card"><h6>Próximo riego</h6><h2 id="stat-next" style="font-size:1.4rem">—</h2></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Módulos -->
+  <div class="container pb-5">
+    <h3 class="mb-4 text-center">Explora los módulos</h3>
+    <div class="row module-grid">
+      <div class="col-md-4 col-sm-6 mb-4">
+        <a href="plantas.html" class="hydralia-card">
+          <div class="module-icon">🪴</div>
+          <h5>Registro de plantas</h5>
+          <p class="text-muted small mb-0">Añade plantas con especie, ubicación y sustrato.</p>
+        </a>
+      </div>
+      <div class="col-md-4 col-sm-6 mb-4">
+        <a href="riego.html" class="hydralia-card">
+          <div class="module-icon">💧</div>
+          <h5>Historial de riego</h5>
+          <p class="text-muted small mb-0">Registra riegos, frecuencia y alertas.</p>
+        </a>
+      </div>
+      <div class="col-md-4 col-sm-6 mb-4">
+        <a href="suelo.html" class="hydralia-card">
+          <div class="module-icon">🌍</div>
+          <h5>Estado del suelo</h5>
+          <p class="text-muted small mb-0">Humedad, compactación, drenaje y hongos.</p>
+        </a>
+      </div>
+      <div class="col-md-4 col-sm-6 mb-4">
+        <a href="hojas.html" class="hydralia-card">
+          <div class="module-icon">🍃</div>
+          <h5>Estado de las hojas</h5>
+          <p class="text-muted small mb-0">Color, manchas, plagas y observaciones.</p>
+        </a>
+      </div>
+      <div class="col-md-4 col-sm-6 mb-4">
+        <a href="estado.html" class="hydralia-card">
+          <div class="module-icon">❤️</div>
+          <h5>Estado general</h5>
+          <p class="text-muted small mb-0">Escala de salud y comentarios.</p>
+        </a>
+      </div>
+      <div class="col-md-4 col-sm-6 mb-4">
+        <a href="consejos.html" class="hydralia-card">
+          <div class="module-icon">💡</div>
+          <h5>Consejos inteligentes</h5>
+          <p class="text-muted small mb-0">Recomendaciones según tus registros.</p>
+        </a>
+      </div>
+      <div class="col-md-4 col-sm-6 mb-4">
+        <a href="recordatorios.html" class="hydralia-card">
+          <div class="module-icon">🔔</div>
+          <h5>Recordatorios</h5>
+          <p class="text-muted small mb-0">Riego, fertilización, poda y más.</p>
+        </a>
+      </div>
+      <div class="col-md-4 col-sm-6 mb-4">
+        <a href="dashboard.html" class="hydralia-card">
+          <div class="module-icon">📊</div>
+          <h5>Panel principal</h5>
+          <p class="text-muted small mb-0">Indicadores, gráficas e historial.</p>
+        </a>
+      </div>
+      <div class="col-md-4 col-sm-6 mb-4">
+        <a href="calendario.html" class="hydralia-card">
+          <div class="module-icon">📅</div>
+          <h5>Calendario</h5>
+          <p class="text-muted small mb-0">Riegos, fertilización y eventos.</p>
+        </a>
+      </div>
+      <div class="col-md-4 col-sm-6 mb-4">
+        <a href="logros.html" class="hydralia-card">
+          <div class="module-icon">🏆</div>
+          <h5>Logros</h5>
+          <p class="text-muted small mb-0">Desbloquea metas de cuidado.</p>
+        </a>
+      </div>
+      <div class="col-md-4 col-sm-6 mb-4">
+        <a href="diagnostico.html" class="hydralia-card">
+          <div class="module-icon">🔍</div>
+          <h5>Diagnóstico</h5>
+          <p class="text-muted small mb-0">Identifica problemas por síntomas.</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Plantas demo -->
+  <div class="container pb-5">
+    <h4 class="mb-3">Tus plantas</h4>
+    <div id="home-plants"></div>
+    <a href="plantas.html" class="btn btn-outline-primary">Gestionar plantas →</a>
+  </div>
+
+  <footer class="container-fluid bg-dark text-white-50 py-4 px-4 text-center">
+    <p class="mb-0">Hydralia — Demo frontend · Cuidado inteligente de plantas</p>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

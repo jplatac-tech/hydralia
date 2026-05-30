@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Hydralia — Diagnóstico</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/hydralia.css" rel="stylesheet">
+</head>
+<body data-page="diagnostico">
+  <div id="hydralia-topnav"></div>
+  <div class="container py-4">
+    <div class="app-layout">
+      <aside class="app-sidebar"><nav class="nav flex-column" id="hydralia-sidebar"></nav></aside>
+      <main class="app-main">
+        <h2 class="mb-1">Diagnóstico de problemas</h2>
+        <p class="text-muted mb-4">Selecciona los síntomas y recibe posibles causas y soluciones.</p>
+        <div class="row">
+          <div class="col-lg-5 mb-4">
+            <div class="card hydralia-card p-4">
+              <form id="formDiagnostico">
+                <div class="symptom-check">
+                  <input type="checkbox" name="symptom" value="hojas_amarillas" id="s1" class="mr-2" />
+                  <label for="s1" class="mb-0">Hojas amarillas</label>
+                </div>
+                <div class="symptom-check">
+                  <input type="checkbox" name="symptom" value="hojas_marrones" id="s2" class="mr-2" />
+                  <label for="s2" class="mb-0">Hojas marrones</label>
+                </div>
+                <div class="symptom-check">
+                  <input type="checkbox" name="symptom" value="crecimiento_lento" id="s3" class="mr-2" />
+                  <label for="s3" class="mb-0">Crecimiento lento</label>
+                </div>
+                <div class="symptom-check">
+                  <input type="checkbox" name="symptom" value="tallos_blandos" id="s4" class="mr-2" />
+                  <label for="s4" class="mb-0">Tallos blandos</label>
+                </div>
+                <div class="symptom-check">
+                  <input type="checkbox" name="symptom" value="insectos" id="s5" class="mr-2" />
+                  <label for="s5" class="mb-0">Presencia de insectos</label>
+                </div>
+                <div class="symptom-check">
+                  <input type="checkbox" name="symptom" value="caida_hojas" id="s6" class="mr-2" />
+                  <label for="s6" class="mb-0">Caída de hojas</label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block mt-3">Diagnosticar</button>
+              </form>
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <h5>Resultados</h5>
+            <div id="diagnostic-result">
+              <p class="text-muted">Selecciona síntomas y pulsa Diagnosticar.</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

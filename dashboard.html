@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Hydralia — Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/hydralia.css" rel="stylesheet">
+</head>
+<body data-page="dashboard">
+  <div id="hydralia-topnav"></div>
+  <div class="container py-4">
+    <div class="app-layout">
+      <aside class="app-sidebar"><nav class="nav flex-column" id="hydralia-sidebar"></nav></aside>
+      <main class="app-main">
+        <h2 class="mb-4">Panel principal</h2>
+        <div class="row mb-4">
+          <div class="col-md-3 mb-3"><div class="card hydralia-card stat-card"><h6>Plantas</h6><h2 id="stat-plants">0</h2></div></div>
+          <div class="col-md-3 mb-3"><div class="card hydralia-card stat-card"><h6>Saludables</h6><h2 id="stat-healthy">0</h2></div></div>
+          <div class="col-md-3 mb-3"><div class="card hydralia-card stat-card"><h6>Atención</h6><h2 id="stat-attention">0</h2></div></div>
+          <div class="col-md-3 mb-3"><div class="card hydralia-card stat-card"><h6>Próximo riego</h6><h2 id="stat-next" style="font-size:1.3rem">—</h2></div></div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 mb-4">
+            <div class="card hydralia-card p-3">
+              <h6>Hidratación / Salud por planta</h6>
+              <div class="chart-wrap">
+                <canvas id="chartHydration"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mb-4">
+            <div class="card hydralia-card p-3">
+              <h6>Frecuencia de riego (4 semanas)</h6>
+              <div class="chart-wrap">
+                <canvas id="chartRiegos"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mb-4">
+            <div class="card hydralia-card p-3">
+              <h6>Gráfica de crecimiento</h6>
+              <div class="chart-wrap">
+                <canvas id="chartGrowth"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mb-4">
+            <div class="card hydralia-card p-3">
+              <h5>Logros</h5>
+              <div id="achievements-preview"></div>
+              <a href="logros.html" class="btn btn-sm btn-outline-primary">Ver todos</a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 mb-4">
+            <div class="card hydralia-card p-3">
+              <h5>Recordatorios</h5>
+              <div id="reminders-list"></div>
+            </div>
+          </div>
+          <div class="col-lg-6 mb-4">
+            <div class="card hydralia-card p-3">
+              <h5>Historial reciente</h5>
+              <div id="recent-history"></div>
+            </div>
+          </div>
+        </div>
+        <h5 class="mt-2">Estado de plantas</h5>
+        <div id="dashboard-plants"></div>
+      </main>
+    </div>
+  </div>
+  <div id="modals-container"></div>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/main.js"></script>
+  <script>$("#modals-container").load("partials/modals.html");</script>
+</body>
+</html>

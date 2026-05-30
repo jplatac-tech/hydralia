@@ -1,0 +1,121 @@
+<!-- Modales compartidos Hydralia -->
+<div class="modal fade" id="modalAddPlant" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Añadir planta</h5>
+        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+      </div>
+      <form id="formAddPlant">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Nombre</label>
+              <input name="name" class="form-control" required />
+            </div>
+            <div class="form-group col-md-6">
+              <label>Fotografía</label>
+              <input name="photo" type="file" accept="image/*" class="form-control-file" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Especie</label>
+              <select name="species" class="form-control">
+                <option>Suculenta</option><option>Cactus</option><option>Helecho</option>
+                <option>Orquídea</option><option>Pothos</option><option>Otra</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Fecha de adquisición</label>
+              <input name="acquired" type="date" class="form-control" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>Ubicación</label>
+              <select name="location" class="form-control">
+                <option>Interior</option><option>Exterior</option><option>Balcón</option><option>Oficina</option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Tamaño maceta</label>
+              <input name="pot" class="form-control" placeholder="Ej. 14 cm" />
+            </div>
+            <div class="form-group col-md-4">
+              <label>Sustrato</label>
+              <input name="substrate" class="form-control" />
+            </div>
+          </div>
+          <hr><h6>Estado del suelo</h6>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>Humedad</label>
+              <select name="soilHumidity" class="form-control"><option>Seca</option><option selected>Húmeda</option><option>Mojada</option></select>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Compactación</label>
+              <select name="soilCompaction" class="form-control"><option selected>Suelo suelto</option><option>Medianamente compacto</option><option>Compactado</option></select>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Drenaje</label>
+              <select name="soilDrainage" class="form-control"><option>Alto</option><option selected>Medio</option><option>Bajo</option></select>
+            </div>
+          </div>
+          <hr><h6>Estado de las hojas</h6>
+          <div class="form-row">
+            <div class="form-group col-md-6"><label>Color</label><input name="leafColor" class="form-control" placeholder="Verde" /></div>
+            <div class="form-group col-md-6"><label>Observaciones</label><input name="leafNotes" class="form-control" /></div>
+          </div>
+          <div class="form-group">
+            <label>Estado general</label>
+            <select name="generalState" class="form-control"><option>Excelente</option><option selected>Buena</option><option>Regular</option><option>Mala</option><option>Crítica</option></select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar planta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAddRiego" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Registrar riego</h5>
+        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+      </div>
+      <form id="formAddRiego">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Planta</label>
+            <select name="plantId" id="plant-select-riego-modal" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label>Fecha y hora</label>
+            <input name="date" type="datetime-local" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Cantidad aproximada</label>
+            <input name="amount" class="form-control" placeholder="Ej. 200 ml" />
+          </div>
+          <div class="form-group">
+            <label>Método</label>
+            <input name="method" class="form-control" placeholder="Regadera, goteo..." />
+          </div>
+          <div class="form-group">
+            <label>Observaciones</label>
+            <textarea name="notes" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

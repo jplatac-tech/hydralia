@@ -1,0 +1,1102 @@
+/* Hydralia — estilos de la app demo */
+:root {
+  --sage: #8aa57b;
+  --sage-dark: #6f965e;
+  --beige: #f5f3ea;
+  --beige-dark: #e8e4d9;
+  --surface: #ffffff;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 4px 20px rgba(63, 74, 58, 0.08);
+  --transition: 0.25s ease;
+}
+
+.hydralia-card {
+  background: var(--surface);
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.hydralia-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(63, 74, 58, 0.12);
+}
+
+.page-hero {
+  background: linear-gradient(135deg, var(--sage) 0%, #a8c49a 100%);
+  color: #fff;
+  padding: 2.5rem 0;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.page-hero .hero-logo {
+  max-height: 120px;
+  width: auto;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+}
+
+.hero-home {
+  min-height: 380px;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, var(--sage) 0%, #a8c49a 50%, #c5ddb8 100%);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-tip-section {
+  max-width: 960px;
+}
+
+.home-tip-section .tip-showcase {
+  margin-bottom: 0;
+}
+
+.hero-home--photo {
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.hero-home--photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(45, 55, 40, 0.5) 0%,
+    rgba(63, 74, 58, 0.35) 45%,
+    rgba(45, 55, 40, 0.62) 100%
+  );
+  z-index: 0;
+}
+
+.dark-mode .hero-home--photo::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 16, 24, 0.72) 0%,
+    rgba(10, 16, 24, 0.45) 45%,
+    rgba(10, 16, 24, 0.7) 100%
+  );
+}
+
+.hero-home .hero-title,
+.hero-home .hero-eyebrow,
+.hero-home .hero-subtitle,
+.hero-home .hero-tip {
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.hero-home .container {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-eyebrow {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+}
+
+.hero-title {
+  font-weight: 700;
+  color: #fff;
+}
+
+.hero-subtitle {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.hero-tip {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.75);
+  border: none;
+  margin: 0;
+}
+
+/* Navbar fija */
+:root {
+  --nav-height: 76px;
+  --brand-logo-text: #2a3d30;
+  --brand-logo-leaf: #8aa57b;
+}
+
+body {
+  padding-top: var(--nav-height);
+}
+
+.hydralia-navbar-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(138, 165, 123, 0.2);
+  box-shadow: 0 2px 12px rgba(63, 74, 58, 0.08);
+}
+
+.hydralia-navbar-wrap .nav-bar::before {
+  display: none !important;
+}
+
+.hydralia-navbar {
+  min-height: var(--nav-height);
+  align-items: center;
+  background: transparent !important;
+}
+
+/* Enlaces navbar — modo claro */
+.hydralia-navbar .navbar-nav .nav-link {
+  color: #3f4a3a !important;
+  font-weight: 500;
+  padding: 0.5rem 0.85rem !important;
+  transition: color 0.2s ease;
+}
+
+.hydralia-navbar .navbar-nav .nav-link:hover,
+.hydralia-navbar .navbar-nav .nav-link:focus,
+.hydralia-navbar .navbar-nav .nav-link.active {
+  color: #5a7a4d !important;
+}
+
+.hydralia-navbar .dropdown-toggle::after {
+  vertical-align: middle;
+}
+
+.hydralia-navbar .navbar-toggler {
+  border-color: rgba(63, 74, 58, 0.25);
+}
+
+/* Logo transparente — sin caja visible */
+.navbar-brand.hydralia-brand {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin-right: 0.75rem;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  text-decoration: none !important;
+  transition: opacity 0.2s ease;
+}
+
+.navbar-brand.hydralia-brand:hover {
+  opacity: 0.88;
+  box-shadow: none;
+}
+
+.navbar-brand .brand-logo {
+  height: 52px;
+  width: auto;
+  max-width: min(300px, 55vw);
+  display: block;
+  object-fit: contain;
+  object-position: left center;
+}
+
+@media (max-width: 991.98px) {
+  .hydralia-navbar .navbar-collapse {
+    background: #ffffff;
+    padding: 0.75rem 0;
+    margin-top: 0.5rem;
+    border-top: 1px solid rgba(138, 165, 123, 0.15);
+    border-radius: 0 0 12px 12px;
+  }
+
+  .dark-mode .hydralia-navbar .navbar-collapse {
+    background: #0d1520;
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --nav-height: 64px;
+  }
+
+  .navbar-brand .brand-logo {
+    height: 42px;
+    max-width: min(240px, 60vw);
+  }
+}
+
+#rotating-tip {
+  font-style: italic;
+  min-height: 1.5em;
+  transition: opacity 0.3s ease;
+}
+
+/* Recuadro de consejos (portada y alertas) */
+.tip-showcase {
+  padding: 0;
+  overflow: hidden;
+  border-left: 5px solid var(--sage);
+  background: linear-gradient(135deg, #ffffff 0%, var(--beige) 100%);
+}
+
+.tip-showcase-inner {
+  display: flex;
+  gap: 1.25rem;
+  padding: 1.35rem 1.5rem;
+  align-items: flex-start;
+}
+
+.tip-showcase-icon {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(138, 165, 123, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+
+.tip-showcase-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tip-showcase-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--sage-dark);
+}
+
+.tip-showcase-counter {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.tip-showcase-text {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: #3f4a3a;
+  margin: 0;
+  min-height: 2.8em;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.tip-showcase-text.tip-fade-out {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.tip-dots {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: rgba(138, 165, 123, 0.35);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.tip-dot:hover {
+  transform: scale(1.15);
+  background: rgba(138, 165, 123, 0.6);
+}
+
+.tip-dot.active {
+  background: var(--sage);
+  transform: scale(1.2);
+}
+
+.tip-showcase-nav .btn {
+  min-width: 36px;
+  padding: 0.2rem 0.5rem;
+}
+
+.tip-banner {
+  border-left: 5px solid #e8b84a;
+  background: linear-gradient(135deg, #fffef8 0%, #faf6ea 100%);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  box-shadow: var(--shadow);
+}
+
+.tip-banner strong {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9a7b2e;
+  margin-bottom: 0.35rem;
+}
+
+.tip-banner p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #3f4a3a;
+}
+
+@media (max-width: 768px) {
+  .tip-showcase-inner {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.15rem;
+  }
+
+  .tip-showcase-text {
+    font-size: 1rem;
+    min-height: auto;
+  }
+}
+
+/* Gráficas Chart.js — altura fija para evitar expansión infinita */
+.chart-wrap {
+  position: relative;
+  height: 260px;
+  max-height: 260px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.chart-wrap canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 260px !important;
+}
+
+.module-grid .hydralia-card {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 1.5rem;
+  height: 100%;
+}
+
+.module-grid .module-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--beige);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Sidebar navegación modular */
+.app-layout {
+  display: flex;
+  gap: 1.5rem;
+  min-height: calc(100vh - 180px);
+}
+
+.app-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem 0;
+  height: fit-content;
+  position: sticky;
+  top: calc(var(--nav-height, 76px) + 1rem);
+}
+
+.app-sidebar .nav-link {
+  color: #3f4a3a;
+  padding: 0.65rem 1.25rem;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-sidebar .nav-link:hover,
+.app-sidebar .nav-link.active {
+  background: var(--beige);
+  color: var(--sage-dark);
+  border-left-color: var(--sage);
+}
+
+.app-main {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 991px) {
+  .app-layout {
+    flex-direction: column;
+  }
+  .app-sidebar {
+    width: 100%;
+    position: static;
+  }
+  .app-sidebar .nav {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+  }
+  .app-sidebar .nav-link {
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+  .app-sidebar .nav-link.active {
+    border-bottom-color: var(--sage);
+  }
+}
+
+/* Barras de bienestar */
+.wellness-bars {
+  margin: 0.75rem 0;
+}
+
+.wellness-item {
+  margin-bottom: 0.5rem;
+}
+
+.wellness-item label {
+  font-size: 0.8rem;
+  margin-bottom: 0.15rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.wellness-item .progress {
+  height: 8px;
+  border-radius: 99px;
+  background: var(--beige-dark);
+}
+
+.wellness-item .progress-bar {
+  border-radius: 99px;
+  transition: width 0.6s ease;
+}
+
+.wellness-health { background: var(--sage) !important; }
+.wellness-hydration { background: #5ba4c9 !important; }
+.wellness-sun { background: #e8b84a !important; }
+
+/* Tarjetas de planta */
+.plant-card-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.plant-card {
+  overflow: hidden;
+}
+
+.plant-card .card-body {
+  padding: 1.25rem;
+}
+
+/* Logros */
+.achievement-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--beige);
+  margin-bottom: 0.75rem;
+  transition: transform var(--transition);
+}
+
+.achievement-item.unlocked {
+  background: linear-gradient(135deg, #e8f0e4, var(--beige));
+  border: 1px solid rgba(138, 165, 123, 0.3);
+}
+
+.achievement-item.locked {
+  opacity: 0.55;
+}
+
+.achievement-icon {
+  font-size: 2rem;
+  width: 48px;
+  text-align: center;
+}
+
+/* Calendario */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-header {
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.5rem;
+  color: var(--sage-dark);
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  background: var(--beige);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 4px;
+  font-size: 0.8rem;
+  cursor: default;
+  transition: transform var(--transition);
+}
+
+.calendar-day:hover {
+  transform: scale(1.05);
+}
+
+.calendar-day.other-month {
+  opacity: 0.35;
+}
+
+.calendar-day.today {
+  border: 2px solid var(--sage);
+  font-weight: 700;
+}
+
+.calendar-day .day-num {
+  font-weight: 600;
+}
+
+.calendar-dots {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.calendar-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.dot-riego { background: #5ba4c9; }
+.dot-fertil { background: var(--sage); }
+.dot-poda { background: #c97a5b; }
+.dot-evento { background: #e8b84a; }
+
+.calendar-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-right: 1rem;
+  font-size: 0.85rem;
+}
+
+/* Animación al marcar tareas */
+.task-done {
+  animation: taskPulse 0.4s ease;
+}
+
+@keyframes taskPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); background: #e8f0e4; }
+  100% { transform: scale(1); }
+}
+
+/* Stat cards */
+.stat-card {
+  text-align: center;
+  padding: 1.25rem;
+}
+
+.stat-card h2 {
+  color: var(--sage-dark);
+  margin: 0;
+}
+
+.stat-card h6 {
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+/* Consejos */
+.tip-card {
+  border-left: 4px solid var(--sage);
+  padding: 1rem 1.25rem 1rem 3rem;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+  box-shadow: var(--shadow);
+  position: relative;
+  line-height: 1.5;
+}
+
+.tip-card::before {
+  content: "💡";
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  font-size: 1.1rem;
+}
+
+.tip-card.alert-tip {
+  border-left-color: #e8b84a;
+}
+
+.tip-card.danger-tip {
+  border-left-color: #dc3545;
+}
+
+/* Diagnóstico */
+.symptom-check {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--beige);
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.symptom-check:hover {
+  background: var(--beige-dark);
+}
+
+.symptom-check input:checked + label {
+  color: var(--sage-dark);
+  font-weight: 600;
+}
+
+.diagnostic-result-item {
+  padding: 1rem;
+  background: var(--beige);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.5rem;
+}
+
+/* Dark mode — tema completo Hydralia */
+.dark-mode {
+  --beige: #1a2332;
+  --beige-dark: #121a24;
+  --surface: #0d1520;
+  --sage-dark: #a8c49a;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  --brand-logo-text: #eef4ee;
+  --brand-logo-leaf: #a8c49a;
+  color-scheme: dark;
+}
+
+.dark-mode,
+.dark-mode .app-main,
+.dark-mode .container {
+  color: #e6efe6;
+}
+
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6,
+.dark-mode .h1,
+.dark-mode .h2,
+.dark-mode .h3,
+.dark-mode .h4,
+.dark-mode .h5,
+.dark-mode .h6 {
+  color: #f0f5f0;
+}
+
+.dark-mode .hydralia-card,
+.dark-mode .app-sidebar,
+.dark-mode .card {
+  background: var(--surface);
+  color: #e6efe6;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow);
+}
+
+.dark-mode .hydralia-card:hover {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+}
+
+/* Navbar modo oscuro */
+.dark-mode .hydralia-navbar-wrap {
+  background: #0d1520;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .hydralia-navbar .navbar-nav .nav-link {
+  color: #e6efe6 !important;
+}
+
+.dark-mode .hydralia-navbar .navbar-nav .nav-link:hover,
+.dark-mode .hydralia-navbar .navbar-nav .nav-link:focus,
+.dark-mode .hydralia-navbar .navbar-nav .nav-link.active {
+  color: #a8c49a !important;
+}
+
+.dark-mode .hydralia-navbar .navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.dark-mode .hydralia-navbar .navbar-toggler-icon {
+  filter: invert(1) brightness(0.9);
+}
+
+.dark-mode .navbar-brand.hydralia-brand {
+  background: transparent;
+  box-shadow: none;
+}
+
+.dark-mode .navbar-brand .brand-logo {
+  opacity: 1;
+  filter: brightness(0) invert(1) sepia(0.25) saturate(1.8) hue-rotate(60deg);
+}
+
+.dark-mode .dropdown-menu {
+  background-color: #0d1520;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .dropdown-item {
+  color: #e6efe6;
+}
+
+.dark-mode .dropdown-item:hover,
+.dark-mode .dropdown-item:focus,
+.dark-mode .dropdown-item.active {
+  background-color: #1a2332;
+  color: #a8c49a;
+}
+
+.dark-mode .btn-outline-secondary {
+  color: rgba(230, 239, 230, 0.85);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.dark-mode .btn-outline-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Sidebar */
+.dark-mode .app-sidebar .nav-link {
+  color: rgba(230, 239, 230, 0.85);
+}
+
+.dark-mode .app-sidebar .nav-link:hover,
+.dark-mode .app-sidebar .nav-link.active {
+  background: #1a2332;
+  color: #a8c49a;
+  border-left-color: #8aa57b;
+}
+
+/* Stats y textos */
+.dark-mode .stat-card h2 {
+  color: #a8c49a;
+}
+
+.dark-mode .stat-card h6 {
+  color: rgba(230, 239, 230, 0.65);
+}
+
+.dark-mode .text-muted {
+  color: rgba(230, 239, 230, 0.6) !important;
+}
+
+.dark-mode .text-info {
+  color: #7ec8e8 !important;
+}
+
+.dark-mode .text-primary {
+  color: #a8c49a !important;
+}
+
+.dark-mode .wellness-item label {
+  color: rgba(230, 239, 230, 0.9);
+}
+
+.dark-mode .wellness-item .progress {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Módulos portada */
+.dark-mode .module-grid .hydralia-card {
+  color: #e6efe6;
+}
+
+.dark-mode .module-grid .module-icon {
+  background: #1a2332;
+}
+
+/* Logros, calendario, tips */
+.dark-mode .achievement-item,
+.dark-mode .calendar-day,
+.dark-mode .symptom-check,
+.dark-mode .tip-card,
+.dark-mode .diagnostic-result-item {
+  background: #1a2332;
+  color: #e6efe6;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dark-mode .achievement-item.unlocked {
+  background: linear-gradient(135deg, #1a2e1a, #1a2332);
+  border-color: rgba(138, 165, 123, 0.35);
+}
+
+.dark-mode .achievement-item.locked {
+  opacity: 0.45;
+}
+
+.dark-mode .calendar-header {
+  color: #a8c49a;
+}
+
+.dark-mode .calendar-day.today {
+  border-color: #8aa57b;
+  background: #1f2d1f;
+}
+
+.dark-mode .calendar-day.other-month {
+  opacity: 0.25;
+}
+
+.dark-mode .calendar-legend span {
+  color: rgba(230, 239, 230, 0.85);
+}
+
+.dark-mode .symptom-check:hover {
+  background: #243044;
+}
+
+.dark-mode .symptom-check label {
+  color: #e6efe6;
+  cursor: pointer;
+}
+
+.dark-mode .symptom-check input:checked + label {
+  color: #a8c49a;
+}
+
+.dark-mode .tip-card.alert-tip {
+  background: #2a2618;
+  border-left-color: #e8b84a;
+}
+
+.dark-mode .tip-card.danger-tip {
+  background: #2a1818;
+  border-left-color: #e07070;
+}
+
+@keyframes taskPulseDark {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); background: #1f2d1f; }
+  100% { transform: scale(1); }
+}
+
+.dark-mode .task-done {
+  animation: taskPulseDark 0.4s ease;
+}
+
+/* Formularios */
+.dark-mode .form-control,
+.dark-mode .custom-select,
+.dark-mode select.form-control {
+  background-color: #121a24;
+  color: #e6efe6;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark-mode .form-control:focus,
+.dark-mode .custom-select:focus {
+  background-color: #121a24;
+  color: #e6efe6;
+  border-color: #8aa57b;
+  box-shadow: 0 0 0 0.15rem rgba(138, 165, 123, 0.25);
+}
+
+.dark-mode .form-control::placeholder {
+  color: rgba(230, 239, 230, 0.4);
+}
+
+.dark-mode label,
+.dark-mode .form-check-label {
+  color: rgba(230, 239, 230, 0.9);
+}
+
+.dark-mode hr {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Botones */
+.dark-mode .btn-outline-secondary {
+  color: rgba(230, 239, 230, 0.85);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.dark-mode .btn-outline-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.dark-mode .btn-outline-primary {
+  color: #a8c49a;
+  border-color: #8aa57b;
+}
+
+.dark-mode .btn-outline-primary:hover {
+  background-color: #8aa57b;
+  color: #0a1018;
+}
+
+.dark-mode .btn-outline-danger {
+  color: #e07070;
+  border-color: #c75050;
+}
+
+.dark-mode .btn-outline-danger:hover {
+  background-color: #c75050;
+  color: #fff;
+}
+
+.dark-mode .btn-link {
+  color: #a8c49a;
+}
+
+.dark-mode .btn-primary {
+  background-color: #7a9a6b;
+  border-color: #7a9a6b;
+  color: #fff;
+}
+
+.dark-mode .btn-primary:hover {
+  background-color: #8aa57b;
+  border-color: #8aa57b;
+}
+
+.dark-mode .btn-secondary {
+  background-color: #243044;
+  border-color: #243044;
+  color: #e6efe6;
+}
+
+/* Modales */
+.dark-mode .modal-content {
+  background-color: #0d1520;
+  color: #e6efe6;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark-mode .modal-header,
+.dark-mode .modal-footer {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-mode .modal-header .close {
+  color: #e6efe6;
+  text-shadow: none;
+  opacity: 0.8;
+}
+
+.dark-mode .modal-header .close:hover {
+  opacity: 1;
+}
+
+.dark-mode .modal-backdrop.show {
+  opacity: 0.7;
+}
+
+/* Footer */
+.dark-mode footer.bg-dark {
+  background-color: #060a10 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Hero en modo oscuro */
+.dark-mode .hero-home:not(.hero-home--photo) {
+  background: linear-gradient(135deg, #1a2e1a 0%, #0d1520 60%, #121a24 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dark-mode .hero-home--photo {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dark-mode .hero-title,
+.dark-mode .hero-eyebrow,
+.dark-mode .hero-subtitle,
+.dark-mode .hero-tip {
+  color: #e6efe6;
+}
+
+.dark-mode .hero-tip {
+  color: rgba(230, 239, 230, 0.7);
+}
+
+.dark-mode .tip-showcase {
+  border-left-color: #a8c49a;
+  background: linear-gradient(135deg, #0d1520 0%, #1a2332 100%);
+}
+
+.dark-mode .tip-showcase-icon {
+  background: rgba(168, 196, 154, 0.15);
+}
+
+.dark-mode .tip-showcase-label {
+  color: #a8c49a;
+}
+
+.dark-mode .tip-showcase-text {
+  color: #e6efe6;
+}
+
+.dark-mode .tip-showcase-counter {
+  color: rgba(230, 239, 230, 0.6);
+}
+
+.dark-mode .tip-banner {
+  background: linear-gradient(135deg, #1a2332 0%, #2a2618 100%);
+  border-left-color: #e8b84a;
+}
+
+.dark-mode .tip-banner strong {
+  color: #e8b84a;
+}
+
+.dark-mode .tip-banner p {
+  color: #e6efe6;
+}
+
+.dark-mode .plant-card-img {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark-mode img.brand-logo {
+  opacity: 1;
+}
+
+/* Gráficas Chart.js contenedor */
+.dark-mode canvas {
+  filter: none;
+}
+
