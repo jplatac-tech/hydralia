@@ -15,10 +15,17 @@ window.HydraliaLayout = (function () {
     { href: "diagnostico.html", icon: "🔍", label: "Diagnóstico", page: "diagnostico" },
   ];
 
+  const BOTTOM_NAV = [
+    { href: "index.html", icon: "🏠", label: "Inicio", page: "inicio" },
+    { href: "plantas.html", icon: "🪴", label: "Plantas", page: "plantas" },
+    { href: "calendario.html", icon: "📅", label: "Calendario", page: "calendario" },
+    { href: "recordatorios.html", icon: "🔔", label: "Recordatorios", page: "recordatorios" },
+    { href: "perfil.html", icon: "👤", label: "Perfil", page: "perfil" },
+  ];
+
   function renderTopNav(activePage) {
-    const links = MODULE_LINKS.filter((l) =>
-      ["inicio", "plantas", "dashboard", "calendario", "diagnostico"].includes(l.page),
-    )
+    const mainPages = ["inicio", "plantas", "calendario", "recordatorios", "dashboard"];
+    const links = MODULE_LINKS.filter((l) => mainPages.includes(l.page))
       .map(
         (l) =>
           `<a href="${l.href}" class="nav-item nav-link${l.page === activePage ? " active" : ""}">${l.label}</a>`,
@@ -41,7 +48,7 @@ window.HydraliaLayout = (function () {
               <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Módulos</a>
                 <div class="dropdown-menu border-0 rounded-0 m-0">
-                  ${MODULE_LINKS.filter((l) => !["inicio", "plantas", "dashboard", "calendario", "diagnostico"].includes(l.page))
+                  ${MODULE_LINKS.filter((l) => !mainPages.includes(l.page) && l.page !== "perfil")
                     .map(
                       (l) =>
                         `<a href="${l.href}" class="dropdown-item${l.page === activePage ? " active" : ""}">${l.icon} ${l.label}</a>`,
@@ -60,19 +67,31 @@ window.HydraliaLayout = (function () {
     </div>`;
   }
 
-  function renderSidebar(activePage) {
-    const items = MODULE_LINKS.filter((l) => l.page !== "inicio")
-      .map(
+  function renderBottomNav(activePage) {
+    return `
+    <nav class="hydralia-bottom-nav" aria-label="Navegación principal">
+      ${BOTTOM_NAV.map(
         (l) =>
-          `<a href="${l.href}" class="nav-link${l.page === activePage ? " active" : ""}">${l.icon} ${l.label}</a>`,
-      )
-      .join("");
-    return `<aside class="app-sidebar"><nav class="nav flex-column">${items}</nav></aside>`;
+          `<a href="${l.href}" class="bottom-nav-item${l.page === activePage ? " active" : ""}">
+            <span class="bottom-nav-icon">${l.icon}</span>
+            <span class="bottom-nav-label">${l.label}</span>
+          </a>`,
+      ).join("")}
+    </nav>`;
   }
 
   function initNav(activePage) {
     const topEl = document.getElementById("hydralia-topnav");
     if (topEl) topEl.innerHTML = renderTopNav(activePage);
+
+    let bottomEl = document.getElementById("hydralia-bottomnav");
+    if (!bottomEl) {
+      bottomEl = document.createElement("div");
+      bottomEl.id = "hydralia-bottomnav";
+      document.body.appendChild(bottomEl);
+    }
+    bottomEl.innerHTML = renderBottomNav(activePage);
+
     const sideEl = document.getElementById("hydralia-sidebar");
     if (sideEl) {
       sideEl.innerHTML = MODULE_LINKS.filter((l) => l.page !== "inicio")
@@ -84,5 +103,5 @@ window.HydraliaLayout = (function () {
     }
   }
 
-  return { MODULE_LINKS, renderTopNav, renderSidebar, initNav };
+  return { MODULE_LINKS, BOTTOM_NAV, renderTopNav, renderBottomNav, initNav };
 })();

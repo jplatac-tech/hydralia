@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Hydralia — Perfil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/hydralia.css" rel="stylesheet">
+</head>
+<body data-page="perfil">
+  <div id="hydralia-topnav"></div>
+  <div class="container py-4">
+    <div class="profile-hero hydralia-card mb-4">
+      <div class="profile-avatar">🌿</div>
+      <div>
+        <h2 class="mb-1">Tu jardín Hydralia</h2>
+        <p class="text-muted mb-0">Resumen de tu actividad de cuidado</p>
+      </div>
+    </div>
+    <div class="row mb-4" id="profile-insights"></div>
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="hydralia-card card-section card-section--gold p-4">
+          <h5 class="mb-3">🏆 Logros recientes</h5>
+          <div id="profile-achievements"></div>
+          <a href="logros.html" class="btn btn-sm btn-outline-primary mt-2">Ver todos</a>
+        </div>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="hydralia-card card-section card-section--water p-4">
+          <h5 class="mb-3">🔔 Próximos recordatorios</h5>
+          <div id="profile-reminders"></div>
+          <a href="recordatorios.html" class="btn btn-sm btn-outline-primary mt-2">Ver todos</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

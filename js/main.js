@@ -48,8 +48,13 @@
     window.dispatchEvent(new Event("hydralia:updated"));
   }
 
+  function plantPhotoUrl(photo) {
+    return encodeURI(photo || "img/user.jpg");
+  }
+
   function renderStats() {
     const plants = H.loadPlants();
+    const insights = H.computeHomeInsights(plants);
     const healthy = plants.filter(
       (p) => p.generalState === "Excelente" || p.generalState === "Buena",
     ).length;
@@ -65,10 +70,96 @@
       if (p.nextWater && (!next || new Date(p.nextWater) < new Date(next)))
         next = p.nextWater;
     });
-    $("#stat-plants").text(plants.length);
+    $("#stat-plants").text(insights.count);
     $("#stat-healthy").text(healthy);
     $("#stat-attention").text(attention);
     $("#stat-next").text(next ? H.formatDate(next) : "—");
+    $("#stat-water-today").text(insights.needsWater);
+    $("#stat-needs-light").text(insights.needsLight);
+    $("#stat-avg-health").text(insights.avgHealth + "%");
+  }
+
+  function renderHomeInsights() {
+    const $grid = $("#home-insights");
+    const $banner = $("#home-dynamic-msg");
+    if (!$grid.length) return;
+    const plants = H.loadPlants();
+    const insights = H.computeHomeInsights(plants);
+    const healthy = plants.filter(
+      (p) => p.generalState === "Excelente" || p.generalState === "Buena",
+    ).length;
+    const attention = plants.filter(
+      (p) =>
+        ["Regular", "Mala", "Crítica"].includes(p.generalState) ||
+        (H.daysSinceLastRiego(p) !== null &&
+          H.computeAvgRiegoDays(p) &&
+          H.daysSinceLastRiego(p) > H.computeAvgRiegoDays(p) + 2),
+    ).length;
+    let next = null;
+    plants.forEach((p) => {
+      if (p.nextWater && (!next || new Date(p.nextWater) < new Date(next)))
+        next = p.nextWater;
+    });
+    if ($banner.length) {
+      $banner.html(`<p class="mb-0">${insights.bannerMessage}</p>`);
+    }
+    $grid.html(`
+      <div class="col-12 home-stats-mobile">
+        <div class="row">
+          <div class="col-6 mb-3">
+            <div class="insight-card insight-card--plants">
+              <span class="insight-icon">🌱</span>
+              <div>
+                <div class="insight-value">${insights.count}</div>
+                <div class="insight-label">Plantas registradas</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 mb-3">
+            <div class="insight-card insight-card--water">
+              <span class="insight-icon">💧</span>
+              <div>
+                <div class="insight-value">${insights.needsWater}</div>
+                <div class="insight-label">Necesitan agua hoy</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 mb-3">
+            <div class="insight-card insight-card--sun">
+              <span class="insight-icon">☀️</span>
+              <div>
+                <div class="insight-value">${insights.needsLight}</div>
+                <div class="insight-label">Necesitan más luz</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 mb-3">
+            <div class="insight-card insight-card--health">
+              <span class="insight-icon">🟢</span>
+              <div>
+                <div class="insight-value">${insights.avgHealth}%</div>
+                <div class="insight-label">Salud promedio</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 home-stats-desktop">
+        <div class="row">
+          <div class="col-md-3 mb-3">
+            <div class="card hydralia-card stat-card"><h6>Plantas</h6><h2>${insights.count}</h2></div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card hydralia-card stat-card"><h6>Saludables</h6><h2>${healthy}</h2></div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card hydralia-card stat-card"><h6>Requieren atención</h6><h2>${attention}</h2></div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card hydralia-card stat-card"><h6>Próximo riego</h6><h2 style="font-size:1.4rem">${next ? H.formatDate(next) : "—"}</h2></div>
+          </div>
+        </div>
+      </div>`);
   }
 
   function renderPlantCards($el, options) {
@@ -91,23 +182,65 @@
         ? renderTipBanner(tips[0].text, "Consejo para " + p.name)
         : "";
       const actions = options.actions !== false
-        ? `<div class="mt-2">
+        ? `<div class="mt-2 plant-card-actions">
+            <button class="btn btn-sm btn-outline-primary btn-record" data-id="${p.id}">Registrar riego</button>
+            <a href="riego.html?plant=${p.id}" class="btn btn-sm btn-outline-secondary">Historial</a>
+            ${options.showDelete ? `<button class="btn btn-sm btn-outline-danger btn-delete" data-id="${p.id}">Eliminar</button>` : ""}
+          </div>`
+        : "";
+      const galleryHtml = options.showGallery
+        ? H.renderPhotoTimeline(p, { showAddButton: true })
+        : "";
+      const stateClass =
+        p.generalState === "Excelente"
+          ? "state-excellent"
+          : p.generalState === "Buena"
+            ? "state-good"
+            : "state-attention";
+      const desktopActions = options.actions !== false
+        ? `<div class="mt-2 plant-card-actions plant-card-actions--inline">
             <button class="btn btn-sm btn-outline-primary mr-1 btn-record" data-id="${p.id}">Registrar riego</button>
             <a href="riego.html?plant=${p.id}" class="btn btn-sm btn-outline-secondary mr-1">Historial</a>
             ${options.showDelete ? `<button class="btn btn-sm btn-outline-danger btn-delete" data-id="${p.id}">Eliminar</button>` : ""}
           </div>`
         : "";
+
       $el.append(`
-        <div class="card hydralia-card plant-card mb-3">
-          <div class="card-body d-flex flex-wrap">
-            <img src="${p.photo || "img/user.jpg"}" class="plant-card-img mr-3 mb-2" alt="${p.name}" />
-            <div style="flex:1;min-width:200px">
-              <h5 class="mb-1">${p.name} <small class="text-muted">${p.species || ""}</small></h5>
-              <p class="mb-1 small">${p.location || "—"} · Maceta ${p.potSize || "—"} · ${p.generalState || "—"}</p>
-              ${freqText ? `<p class="mb-1 small text-info">${freqText}</p>` : ""}
-              ${H.renderWellnessBars(p)}
+        <div class="card hydralia-card plant-card mb-4">
+          <div class="plant-layout-desktop">
+            <div class="card-body d-flex flex-wrap">
+              <img src="${plantPhotoUrl(p.photo)}" class="plant-card-img mr-3 mb-2" alt="${p.name}" loading="lazy" />
+              <div class="plant-card-desktop-body">
+                <h5 class="mb-1">${p.name} <small class="text-muted">${p.species || ""}</small></h5>
+                <p class="mb-1 small">${p.location || "—"} · Maceta ${p.potSize || "—"} · <span class="plant-state-inline ${stateClass}">${p.generalState || "—"}</span></p>
+                ${freqText ? `<p class="mb-1 small text-info">${freqText}</p>` : ""}
+                ${H.renderWellnessBars(p)}
+                ${options.showHappiness !== false && options.showGallery ? H.renderHappinessBlock(p) : ""}
+                ${tipHtml}
+                ${desktopActions}
+              </div>
+            </div>
+            ${galleryHtml}
+          </div>
+          <div class="plant-layout-mobile">
+            <div class="plant-card-v2-photo">
+              <img src="${plantPhotoUrl(p.photo)}" alt="${p.name}" loading="lazy" />
+              <span class="plant-state-badge ${stateClass}">${p.generalState || "—"}</span>
+            </div>
+            <div class="card-body">
+              <div class="plant-card-v2-head">
+                <div>
+                  <h5 class="mb-1"><span class="plant-avatar">🪴</span> ${p.name}</h5>
+                  <p class="text-muted small mb-0">${p.species || ""} · ${p.location || "—"}</p>
+                </div>
+              </div>
+              <p class="plant-dynamic-msg">${H.getPlantMessage(p)}</p>
+              ${H.renderWellnessRings(p)}
+              ${options.showHappiness !== false ? H.renderHappinessBlock(p) : ""}
+              ${freqText ? `<p class="mb-2 small text-info">${freqText}</p>` : ""}
               ${tipHtml}
               ${actions}
+              ${galleryHtml}
             </div>
           </div>
         </div>`);
@@ -160,6 +293,7 @@
       },
       wellness: { health: 80, hydration: 70, sun: 75 },
       history: [],
+      photoGallery: [],
       generalState: fd.get("generalState") || "Buena",
       comments: fd.get("comments") || "",
     });
@@ -169,10 +303,77 @@
     initCurrentPage();
   });
 
+  let pendingDeleteId = null;
+
   $(document).on("click", ".btn-delete", function () {
-    if (!confirm("¿Eliminar esta planta?")) return;
+    pendingDeleteId = $(this).data("id");
+    const plant = H.getPlantById(pendingDeleteId);
+    $("#delete-plant-name").text(plant ? plant.name : "esta planta");
+    $("#modalDeletePlant").modal("show");
+  });
+
+  $(document).on("click", "#confirmDeletePlant", function () {
+    if (!pendingDeleteId) return;
+    H.savePlants(H.loadPlants().filter((p) => p.id !== pendingDeleteId));
+    H.saveReminders(
+      H.loadReminders().filter((r) => r.plantId !== pendingDeleteId),
+    );
+    pendingDeleteId = null;
+    $("#modalDeletePlant").modal("hide");
+    initCurrentPage();
+  });
+
+  $(document).on("click", ".btn-add-gallery", function () {
     const id = $(this).data("id");
-    H.savePlants(H.loadPlants().filter((p) => p.id !== id));
+    const plant = H.getPlantById(id);
+    $("#gallery-plant-id").val(id);
+    $("#modalAddGalleryPhoto .modal-title").text(
+      `Añadir foto — ${plant ? plant.name : "Planta"}`,
+    );
+    const now = new Date();
+    const monthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    $("#formAddGalleryPhoto")[0].reset();
+    $("#gallery-plant-id").val(id);
+    $("#formAddGalleryPhoto [name=month]").val(monthStr);
+    $("#modalAddGalleryPhoto").modal("show");
+  });
+
+  $(document).on("submit", "#formAddGalleryPhoto", async function (e) {
+    e.preventDefault();
+    const fd = new FormData(this);
+    const plantId = fd.get("plantId");
+    const month = fd.get("month");
+    const note = fd.get("note") || "";
+    const file = fd.get("photo");
+    if (!plantId || !month) return;
+
+    let photoUrl = null;
+    if (file && file.size) {
+      photoUrl = await readFileAsDataURL(file);
+    }
+    if (!photoUrl) {
+      alert("Selecciona una imagen para la galería.");
+      return;
+    }
+
+    const plants = H.loadPlants();
+    const plant = plants.find((p) => p.id === plantId);
+    if (!plant) return;
+
+    if (!plant.photoGallery) plant.photoGallery = [];
+    const entry = {
+      month,
+      label: H.formatMonthLabel(month),
+      photo: photoUrl,
+      note,
+    };
+    const existing = plant.photoGallery.findIndex((g) => g.month === month);
+    if (existing >= 0) plant.photoGallery[existing] = entry;
+    else plant.photoGallery.push(entry);
+    plant.photoGallery = H.sortPhotoGallery(plant.photoGallery);
+
+    H.savePlants(plants);
+    $("#modalAddGalleryPhoto").modal("hide");
     initCurrentPage();
   });
 
@@ -304,12 +505,20 @@
     return {
       responsive: true,
       maintainAspectRatio: false,
+      animation: { duration: 900, easing: "easeOutQuart" },
+      interaction: { mode: "index", intersect: false },
       plugins: {
-        legend: { labels: { color: t.text } },
+        legend: { labels: { color: t.text, usePointStyle: true, padding: 16 } },
+        tooltip: {
+          backgroundColor: "rgba(45, 55, 40, 0.92)",
+          padding: 12,
+          cornerRadius: 10,
+          displayColors: true,
+        },
       },
       scales: extraScales || {
-        x: { ticks: { color: t.text }, grid: { color: t.grid } },
-        y: { ticks: { color: t.text }, grid: { color: t.grid } },
+        x: { ticks: { color: t.text }, grid: { color: t.grid, drawBorder: false } },
+        y: { ticks: { color: t.text }, grid: { color: t.grid, drawBorder: false } },
       },
     };
   }
@@ -344,14 +553,38 @@
     if (ctxH && !hydrationChart) {
       hydrationChart = new Chart(ctxH, {
         type: "bar",
-        data: { labels: [], datasets: [{ label: "Salud (%)", data: [], backgroundColor: "rgba(138,165,123,0.85)" }] },
+        data: {
+          labels: [],
+          datasets: [{
+            label: "Salud (%)",
+            data: [],
+            backgroundColor: "rgba(138,165,123,0.85)",
+            borderRadius: 8,
+            borderSkipped: false,
+          }],
+        },
         options: baseChartOptions(yScale100),
       });
     }
     if (ctxR && !riegosChart) {
       riegosChart = new Chart(ctxR, {
         type: "line",
-        data: { labels: [], datasets: [{ label: "Riegos", data: [], borderColor: "#5ba4c9", backgroundColor: "rgba(91,164,201,0.15)", fill: true, tension: 0.3 }] },
+        data: {
+          labels: [],
+          datasets: [{
+            label: "Riegos",
+            data: [],
+            borderColor: "#5ba4c9",
+            backgroundColor: "rgba(91,164,201,0.18)",
+            fill: true,
+            tension: 0.42,
+            pointRadius: 5,
+            pointHoverRadius: 8,
+            pointBackgroundColor: "#5ba4c9",
+            pointBorderColor: "#fff",
+            pointBorderWidth: 2,
+          }],
+        },
         options: baseChartOptions(),
       });
     }
@@ -361,8 +594,26 @@
         data: {
           labels: [],
           datasets: [
-            { label: "Salud", data: [], borderColor: "#8aa57b", backgroundColor: "rgba(138,165,123,0.1)", fill: false, tension: 0.3 },
-            { label: "Hidratación", data: [], borderColor: "#5ba4c9", backgroundColor: "rgba(91,164,201,0.1)", fill: false, tension: 0.3 },
+            {
+              label: "Salud",
+              data: [],
+              borderColor: "#8aa57b",
+              backgroundColor: "rgba(138,165,123,0.12)",
+              fill: true,
+              tension: 0.42,
+              pointRadius: 5,
+              pointHoverRadius: 8,
+            },
+            {
+              label: "Hidratación",
+              data: [],
+              borderColor: "#5ba4c9",
+              backgroundColor: "rgba(91,164,201,0.12)",
+              fill: true,
+              tension: 0.42,
+              pointRadius: 5,
+              pointHoverRadius: 8,
+            },
           ],
         },
         options: baseChartOptions(yScale100),
@@ -376,7 +627,7 @@
     if (hydrationChart) {
       hydrationChart.data.labels = plants.map((p) => p.name);
       hydrationChart.data.datasets[0].data = plants.map((p) => H.getWellness(p).health);
-      hydrationChart.update("none");
+      hydrationChart.update();
     }
     if (riegosChart) {
       const weeks = [];
@@ -401,13 +652,13 @@
       }
       riegosChart.data.labels = weeks;
       riegosChart.data.datasets[0].data = counts;
-      riegosChart.update("none");
+      riegosChart.update();
     }
     if (growthChart) {
       growthChart.data.labels = plants.map((p) => p.name);
       growthChart.data.datasets[0].data = plants.map((p) => H.getWellness(p).health);
       growthChart.data.datasets[1].data = plants.map((p) => H.getWellness(p).hydration);
-      growthChart.update("none");
+      growthChart.update();
     }
   }
 
@@ -436,7 +687,6 @@
             </div>
             <div>
               <button class="btn btn-sm btn-outline-primary reminder-done" data-id="${rem.id}">Marcar hecho</button>
-              <a class="btn btn-sm btn-link" href="mailto:?subject=${encodeURIComponent(rem.message)}&body=Recordatorio%20Hydralia">Email</a>
             </div>
           </div>`);
       });
@@ -454,18 +704,20 @@
   /* ── Páginas ── */
   const pages = {
     inicio: function () {
-      renderStats();
-      renderPlantCards($("#home-plants"), { actions: false });
+      renderHomeInsights();
+      renderPlantCards($("#home-plants"), { actions: false, showHappiness: false });
       initTipShowcase();
     },
 
     plantas: function () {
-      renderPlantCards($("#plant-list"), { showDelete: true });
+      renderPlantCards($("#plant-list"), { showDelete: true, showGallery: true });
     },
 
     dashboard: function () {
       renderStats();
-      renderPlantCards($("#dashboard-plants"), { actions: true });
+      const insights = H.computeHomeInsights(H.loadPlants());
+      $("#dashboard-dynamic-msg").html(`<p class="mb-0">${insights.bannerMessage}</p>`);
+      renderPlantCards($("#dashboard-plants"), { actions: true, showHappiness: false });
       const plants = H.loadPlants();
       const $ach = $("#achievements-preview");
       if ($ach.length) {
@@ -602,7 +854,7 @@
         $c.append(`
           <div class="card hydralia-card mb-3 p-4">
             <div class="d-flex flex-wrap">
-              <img src="${p.photo || "img/user.jpg"}" class="plant-card-img mr-3" alt="${p.name}" />
+              <img src="${plantPhotoUrl(p.photo)}" class="plant-card-img mr-3" alt="${p.name}" />
               <div style="flex:1">
                 <h5>${p.name}</h5>
                 <form class="form-hojas" data-id="${p.id}">
@@ -794,6 +1046,45 @@
 
     diagnostico: function () {
       /* inline form handled below */
+    },
+
+    perfil: function () {
+      const plants = H.loadPlants();
+      const insights = H.computeHomeInsights(plants);
+      $("#profile-insights").html(`
+        <div class="col-6 col-md-3 mb-3">
+          <div class="insight-card insight-card--plants"><span class="insight-icon">🌱</span><div><div class="insight-value">${insights.count}</div><div class="insight-label">Plantas</div></div></div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+          <div class="insight-card insight-card--water"><span class="insight-icon">💧</span><div><div class="insight-value">${insights.needsWater}</div><div class="insight-label">Agua hoy</div></div></div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+          <div class="insight-card insight-card--sun"><span class="insight-icon">☀️</span><div><div class="insight-value">${insights.needsLight}</div><div class="insight-label">Más luz</div></div></div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+          <div class="insight-card insight-card--health"><span class="insight-icon">🟢</span><div><div class="insight-value">${insights.avgHealth}%</div><div class="insight-label">Salud media</div></div></div>
+        </div>`);
+
+      const $ach = $("#profile-achievements");
+      $ach.empty();
+      H.computeAchievements(plants)
+        .filter((a) => a.unlocked)
+        .slice(0, 4)
+        .forEach((a) => {
+          $ach.append(`<div class="achievement-item unlocked mb-2"><span class="achievement-icon">${a.icon}</span><div><strong>${a.title}</strong></div></div>`);
+        });
+      if (!$ach.children().length) $ach.html('<p class="text-muted small">Aún no hay logros desbloqueados.</p>');
+
+      const $rem = $("#profile-reminders");
+      $rem.empty();
+      H.loadReminders()
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+        .slice(0, 3)
+        .forEach((r) => {
+          const p = plants.find((x) => x.id === r.plantId);
+          $rem.append(`<p class="mb-2 small"><strong>🔔 ${r.message}</strong><br><span class="text-muted">${p ? p.name : "Planta"} · ${H.formatDateTime(r.date)}</span></p>`);
+        });
+      if (!$rem.children().length) $rem.html('<p class="text-muted small">No hay recordatorios pendientes.</p>');
     },
   };
 

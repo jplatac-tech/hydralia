@@ -93,7 +93,7 @@ window.Hydralia = (function () {
     window.dispatchEvent(new Event("hydralia:updated"));
   }
 
-  const DEMO_VERSION = "2";
+  const DEMO_VERSION = "6";
 
   function ensureSampleData() {
     if (localStorage.getItem("hydralia_demo_version") !== DEMO_VERSION) {
@@ -117,8 +117,34 @@ window.Hydralia = (function () {
       location: "Interior",
       potSize: "14 cm",
       substrate: "Ligero, drenante",
-      photo: "img/IMG-20260507-WA0027.jpg",
+      photo: "img/Potus.jpg",
       leafPhoto: null,
+      photoGallery: [
+        {
+          month: "2026-02",
+          label: "Febrero 2026",
+          photo: "img/potus1.webp",
+          note: "Recién trasplantado a maceta colgante.",
+        },
+        {
+          month: "2026-03",
+          label: "Marzo 2026",
+          photo: "img/potus2.webp",
+          note: "Primeras hojas nuevas tras el invierno.",
+        },
+        {
+          month: "2026-04",
+          label: "Abril 2026",
+          photo: "img/potus3.webp",
+          note: "Ramas más largas; buena luz indirecta.",
+        },
+        {
+          month: "2026-05",
+          label: "Mayo 2026",
+          photo: "img/Potus.jpg",
+          note: "Crecimiento vigoroso en primavera.",
+        },
+      ],
       soil: {
         humidity: "Húmeda",
         compaction: "Suelo suelto",
@@ -162,7 +188,7 @@ window.Hydralia = (function () {
       location: "Balcón",
       potSize: "10 cm",
       substrate: "Arenoso",
-      photo: "img/IMG-20260512-WA0013.jpg",
+      photo: "img/Suculenta Jade.webp",
       leafPhoto: null,
       soil: {
         humidity: "Seca",
@@ -199,15 +225,126 @@ window.Hydralia = (function () {
       comments: "Crecimiento vigoroso en el balcón.",
     };
 
-    savePlants([p1, p2]);
+    const p3 = {
+      id: "sample_3",
+      name: "Monstera",
+      species: "Monstera deliciosa",
+      acquired: daysAgo(45),
+      location: "Interior",
+      potSize: "18 cm",
+      substrate: "Fibra de coco y perlita",
+      photo: "img/Monstera.webp",
+      leafPhoto: null,
+      soil: {
+        humidity: "Húmeda",
+        compaction: "Suelo suelto",
+        drainage: "Alto",
+        fungi: false,
+      },
+      leaves: {
+        color: "Verde oscuro",
+        spots: false,
+        dry: false,
+        yellow: false,
+        falling: false,
+        pests: false,
+        notes: "Nueva hoja con fenestraciones",
+      },
+      wellness: { health: 88, hydration: 75, sun: 80 },
+      history: [
+        { date: daysAgo(10), amount: "250 ml", method: "Regadera", notes: "Riego profundo" },
+        { date: daysAgo(3), amount: "200 ml", method: "Regadera", notes: "" },
+      ],
+      nextWater: daysAgo(-4),
+      generalState: "Buena",
+      comments: "Crece bien cerca de la ventana orientada al este.",
+    };
+
+    const p4 = {
+      id: "sample_4",
+      name: "Lengua de suegra",
+      species: "Sansevieria trifasciata",
+      acquired: daysAgo(120),
+      location: "Interior",
+      potSize: "12 cm",
+      substrate: "Arena y tierra universal",
+      photo: "img/Lengua de suegra.jpg",
+      leafPhoto: null,
+      soil: {
+        humidity: "Seca",
+        compaction: "Medianamente compacto",
+        drainage: "Alto",
+        fungi: false,
+      },
+      leaves: {
+        color: "Verde bandeado",
+        spots: false,
+        dry: false,
+        yellow: false,
+        falling: false,
+        pests: false,
+        notes: "",
+      },
+      wellness: { health: 92, hydration: 50, sun: 70 },
+      history: [
+        { date: daysAgo(25), amount: "80 ml", method: "Regadera", notes: "" },
+        { date: daysAgo(12), amount: "70 ml", method: "Regadera", notes: "Invierno, poca agua" },
+      ],
+      nextWater: daysAgo(-10),
+      generalState: "Excelente",
+      comments: "Muy resistente; ideal para principiantes.",
+    };
+
+    const p5 = {
+      id: "sample_5",
+      name: "Lavanda",
+      species: "Lavandula angustifolia",
+      acquired: daysAgo(60),
+      location: "Exterior",
+      potSize: "16 cm",
+      substrate: "Calizo, bien drenado",
+      photo: "img/Lavanda.webp",
+      leafPhoto: null,
+      soil: {
+        humidity: "Seca",
+        compaction: "Suelo suelto",
+        drainage: "Alto",
+        fungi: false,
+      },
+      leaves: {
+        color: "Verde grisáceo",
+        spots: false,
+        dry: false,
+        yellow: false,
+        falling: false,
+        pests: false,
+        notes: "Aroma intenso al tacto",
+      },
+      wellness: { health: 85, hydration: 60, sun: 95 },
+      history: [
+        { date: daysAgo(14), amount: "100 ml", method: "Regadera", notes: "" },
+        { date: daysAgo(6), amount: "90 ml", method: "Regadera", notes: "Mañana soleada" },
+      ],
+      nextWater: daysAgo(-5),
+      generalState: "Buena",
+      comments: "Floreció la semana pasada; podar después de floración.",
+    };
+
+    savePlants([p1, p2, p3, p4, p5]);
 
     const events = [
       { id: uid("ev_"), plantId: "sample_1", type: "riego", date: daysAgo(2), title: "Riego Potus" },
       { id: uid("ev_"), plantId: "sample_1", type: "riego", date: daysAgo(7), title: "Riego Potus" },
       { id: uid("ev_"), plantId: "sample_2", type: "riego", date: daysAgo(5), title: "Riego Suculenta" },
+      { id: uid("ev_"), plantId: "sample_3", type: "riego", date: daysAgo(3), title: "Riego Monstera" },
+      { id: uid("ev_"), plantId: "sample_4", type: "riego", date: daysAgo(12), title: "Riego Sansevieria" },
+      { id: uid("ev_"), plantId: "sample_5", type: "riego", date: daysAgo(6), title: "Riego Lavanda" },
       { id: uid("ev_"), plantId: "sample_1", type: "fertilizacion", date: daysAgo(-5), title: "Fertilizar Potus" },
       { id: uid("ev_"), plantId: "sample_2", type: "poda", date: daysAgo(-12), title: "Poda Suculenta" },
+      { id: uid("ev_"), plantId: "sample_3", type: "fertilizacion", date: daysAgo(-8), title: "Fertilizar Monstera" },
+      { id: uid("ev_"), plantId: "sample_5", type: "poda", date: daysAgo(-3), title: "Poda Lavanda" },
       { id: uid("ev_"), plantId: "sample_1", type: "evento", date: daysAgo(-1), title: "Revisión mensual" },
+      { id: uid("ev_"), plantId: "sample_4", type: "maceta", date: daysAgo(-15), title: "Trasplante Sansevieria" },
     ];
     localStorage.setItem(EVENTS_KEY, JSON.stringify(events));
 
@@ -239,6 +376,27 @@ window.Hydralia = (function () {
         type: "maceta",
         date: daysAgo(-20),
         message: "Evaluar cambio de maceta",
+      },
+      {
+        id: uid("rem_"),
+        plantId: "sample_3",
+        type: "riego",
+        date: daysAgo(-4),
+        message: "Regar Monstera",
+      },
+      {
+        id: uid("rem_"),
+        plantId: "sample_4",
+        type: "riego",
+        date: daysAgo(-10),
+        message: "Regar Lengua de suegra",
+      },
+      {
+        id: uid("rem_"),
+        plantId: "sample_5",
+        type: "poda",
+        date: daysAgo(-7),
+        message: "Podar Lavanda tras floración",
       },
     ];
     localStorage.setItem(REMINDERS_KEY, JSON.stringify(reminders));
@@ -343,6 +501,17 @@ window.Hydralia = (function () {
     const healthy = plants.filter(
       (p) => p.generalState === "Excelente" || p.generalState === "Buena",
     ).length;
+    const excellent = plants.filter((p) => p.generalState === "Excelente").length;
+    const locations = new Set(plants.map((p) => p.location).filter(Boolean)).size;
+    const outdoor = plants.some((p) =>
+      ["Exterior", "Balcón", "Terraza"].includes(p.location),
+    );
+    const maxHealth = plants.reduce(
+      (max, p) => Math.max(max, getWellness(p).health),
+      0,
+    );
+    const events = loadEvents();
+    const eventTypes = new Set(events.map((e) => e.type)).size;
 
     const oldest = plants.reduce((min, p) => {
       if (!p.acquired) return min;
@@ -355,12 +524,44 @@ window.Hydralia = (function () {
 
     return [
       {
+        id: "first_plant",
+        icon: "🪴",
+        title: "Primera planta registrada",
+        desc: "Añade tu primera planta al diario.",
+        unlocked: plants.length >= 1,
+        progress: Math.min(100, plants.length >= 1 ? 100 : 0),
+      },
+      {
+        id: "three_plants",
+        icon: "🌿",
+        title: "Pequeño jardín",
+        desc: "Registra al menos 3 plantas.",
+        unlocked: plants.length >= 3,
+        progress: Math.min(100, Math.round((plants.length / 3) * 100)),
+      },
+      {
+        id: "five_plants",
+        icon: "🏡",
+        title: "Coleccionista verde",
+        desc: "Cuida 5 plantas o más en tu diario.",
+        unlocked: plants.length >= 5,
+        progress: Math.min(100, Math.round((plants.length / 5) * 100)),
+      },
+      {
         id: "first_month",
         icon: "🌱",
-        title: "Primer mes cuidando una planta",
-        desc: "Registra plantas y cuídalas al menos 30 días.",
+        title: "Primer mes cuidando plantas",
+        desc: "Lleva al menos 30 días registrando el cuidado.",
         unlocked: daysSinceFirst >= 30,
         progress: Math.min(100, Math.round((daysSinceFirst / 30) * 100)),
+      },
+      {
+        id: "three_months",
+        icon: "📅",
+        title: "Tres meses de constancia",
+        desc: "Mantén tu diario activo durante 90 días.",
+        unlocked: daysSinceFirst >= 90,
+        progress: Math.min(100, Math.round((daysSinceFirst / 90) * 100)),
       },
       {
         id: "ten_waterings",
@@ -371,14 +572,235 @@ window.Hydralia = (function () {
         progress: Math.min(100, Math.round((totalRiegos / 10) * 100)),
       },
       {
+        id: "twenty_waterings",
+        icon: "🚿",
+        title: "20 riegos completados",
+        desc: "Lleva un historial de 20 riegos.",
+        unlocked: totalRiegos >= 20,
+        progress: Math.min(100, Math.round((totalRiegos / 20) * 100)),
+      },
+      {
         id: "five_healthy",
-        icon: "🌿",
+        icon: "❤️",
         title: "5 plantas saludables",
         desc: "Mantén 5 plantas en estado Buena o Excelente.",
         unlocked: healthy >= 5,
         progress: Math.min(100, Math.round((healthy / 5) * 100)),
       },
+      {
+        id: "all_excellent",
+        icon: "⭐",
+        title: "Jardín impecable",
+        desc: "Ten 3 plantas en estado Excelente a la vez.",
+        unlocked: excellent >= 3,
+        progress: Math.min(100, Math.round((excellent / 3) * 100)),
+      },
+      {
+        id: "outdoor_gardener",
+        icon: "☀️",
+        title: "Jardinero exterior",
+        desc: "Cuida al menos una planta en exterior o balcón.",
+        unlocked: outdoor,
+        progress: outdoor ? 100 : 0,
+      },
+      {
+        id: "varied_spaces",
+        icon: "🏠",
+        title: "Espacios variados",
+        desc: "Planta en 3 ubicaciones distintas (interior, balcón, exterior…).",
+        unlocked: locations >= 3,
+        progress: Math.min(100, Math.round((locations / 3) * 100)),
+      },
+      {
+        id: "peak_health",
+        icon: "💚",
+        title: "Salud al máximo",
+        desc: "Consigue que una planta alcance 95% de salud.",
+        unlocked: maxHealth >= 95,
+        progress: Math.min(100, Math.round((maxHealth / 95) * 100)),
+      },
+      {
+        id: "event_explorer",
+        icon: "📋",
+        title: "Diario completo",
+        desc: "Registra eventos de al menos 4 tipos distintos.",
+        unlocked: eventTypes >= 4,
+        progress: Math.min(100, Math.round((eventTypes / 4) * 100)),
+      },
     ];
+  }
+
+  function computeHappiness(p) {
+    const w = getWellness(p);
+    const tips = generateTips(p);
+    let score = Math.round(w.health * 0.4 + w.hydration * 0.3 + w.sun * 0.3);
+    if (tips.some((t) => t.type === "danger")) score -= 15;
+    else if (tips.some((t) => t.type === "alert")) score -= 8;
+    score = Math.max(0, Math.min(100, score));
+
+    const reasons = [];
+    if (w.hydration >= 60)
+      reasons.push({ ok: true, text: "Bien hidratada" });
+    else reasons.push({ ok: false, text: "Necesita agua pronto" });
+
+    if (w.sun >= 70) reasons.push({ ok: true, text: "Buena iluminación" });
+    else reasons.push({ ok: false, text: "Necesita más luz" });
+
+    if (!tips.some((t) => t.type === "danger"))
+      reasons.push({ ok: true, text: "Sin signos de enfermedad" });
+    else reasons.push({ ok: false, text: "Revisar posibles problemas" });
+
+    return { score, reasons };
+  }
+
+  function getPlantMessage(p) {
+    const h = computeHappiness(p);
+    if (h.score >= 90)
+      return `Tu ${p.name} está creciendo muy bien esta semana 🌱`;
+    if (h.score >= 75) return `${p.name} se ve bien, sigue así 💚`;
+    if (h.score >= 55) return `${p.name} necesita un poco de atención 🌿`;
+    return `${p.name} requiere cuidados urgentes ⚠️`;
+  }
+
+  function computeHomeInsights(plants) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const needsWater = plants.filter((p) => {
+      if (!p.nextWater) {
+        const days = daysSinceLastRiego(p);
+        const avg = computeAvgRiegoDays(p);
+        return avg && days !== null && days >= avg;
+      }
+      const d = new Date(p.nextWater);
+      d.setHours(0, 0, 0, 0);
+      return d <= today;
+    }).length;
+
+    const needsLight = plants.filter((p) => getWellness(p).sun < 70).length;
+    const avgHealth = plants.length
+      ? Math.round(
+          plants.reduce((s, p) => s + getWellness(p).health, 0) / plants.length,
+        )
+      : 0;
+
+    const thriving = plants
+      .slice()
+      .sort((a, b) => computeHappiness(b).score - computeHappiness(a).score)[0];
+
+    let bannerMessage = "Añade tu primera planta para empezar el diario 🪴";
+    if (plants.length) {
+      if (needsWater > 0)
+        bannerMessage = `💧 ${needsWater} planta${needsWater > 1 ? "s" : ""} necesita${needsWater === 1 ? "" : "n"} agua hoy`;
+      else if (thriving && computeHappiness(thriving).score >= 88)
+        bannerMessage = getPlantMessage(thriving);
+      else
+        bannerMessage = `${plants.length} plantas bajo cuidado · salud promedio ${avgHealth}%`;
+    }
+
+    return {
+      count: plants.length,
+      needsWater,
+      needsLight,
+      avgHealth,
+      bannerMessage,
+    };
+  }
+
+  function renderWellnessRing(label, value, icon, color) {
+    return `
+      <div class="wellness-ring-item">
+        <div class="ring-meter" style="--pct:${value};--ring-color:${color}" title="${label}">
+          <span>${icon}<br>${value}%</span>
+        </div>
+        <small>${label}</small>
+      </div>`;
+  }
+
+  function renderWellnessRings(p) {
+    const w = getWellness(p);
+    const happy = computeHappiness(p).score;
+    return `
+      <div class="wellness-rings">
+        ${renderWellnessRing("Salud", w.health, "🌿", "#8aa57b")}
+        ${renderWellnessRing("Agua", w.hydration, "💧", "#5ba4c9")}
+        ${renderWellnessRing("Sol", w.sun, "☀️", "#e8b84a")}
+        ${renderWellnessRing("Felicidad", happy, "🌟", "#c9a227")}
+      </div>`;
+  }
+
+  function renderHappinessBlock(p) {
+    const { score, reasons } = computeHappiness(p);
+    const reasonHtml = reasons
+      .map(
+        (r) =>
+          `<li class="${r.ok ? "reason-ok" : "reason-warn"}">${r.ok ? "✅" : "⚠️"} ${r.text}</li>`,
+      )
+      .join("");
+    return `
+      <div class="happiness-block">
+        <div class="happiness-score">
+          <div class="ring-meter ring-meter-lg" style="--pct:${score};--ring-color:#8aa57b">
+            <span>${score}%</span>
+          </div>
+          <div>
+            <strong>🌟 Felicidad</strong>
+            <ul class="happiness-reasons">${reasonHtml}</ul>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function formatMonthLabel(monthStr) {
+    if (!monthStr) return "";
+    const [y, m] = monthStr.split("-");
+    const names = [
+      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
+    ];
+    const mi = parseInt(m, 10) - 1;
+    return `${names[mi] || m} ${y}`;
+  }
+
+  function sortPhotoGallery(gallery) {
+    return (gallery || []).slice().sort((a, b) => a.month.localeCompare(b.month));
+  }
+
+  function renderPhotoTimeline(p, options) {
+    options = options || {};
+    const gallery = sortPhotoGallery(p.photoGallery);
+    if (!gallery.length && !options.showAddButton) return "";
+
+    const items = gallery
+      .map(
+        (entry) => `
+        <article class="photo-timeline-item">
+          <div class="photo-timeline-marker"></div>
+          <time class="photo-timeline-month">${entry.label || formatMonthLabel(entry.month)}</time>
+          <figure class="photo-timeline-figure">
+            <img src="${encodeURI(entry.photo)}" alt="${entry.label || entry.month} — ${p.name}" loading="lazy" />
+            <figcaption>${entry.note || ""}</figcaption>
+          </figure>
+        </article>`,
+      )
+      .join("");
+
+    const track = gallery.length
+      ? `<div class="photo-timeline-track">${items}</div>`
+      : `<p class="photo-timeline-empty text-muted small mb-0">Aún no hay fotos. Añade la primera para seguir el crecimiento mes a mes.</p>`;
+
+    const addBtn = options.showAddButton
+      ? `<button type="button" class="btn btn-sm btn-outline-primary btn-add-gallery" data-id="${p.id}">+ Añadir foto</button>`
+      : "";
+
+    return `
+      <section class="photo-timeline" aria-label="Galería mensual de ${p.name}">
+        <div class="photo-timeline-head">
+          <h6 class="photo-timeline-title">📸 Evolución mes a mes</h6>
+          ${addBtn}
+        </div>
+        ${track}
+      </section>`;
   }
 
   function renderWellnessBars(p) {
@@ -446,11 +868,19 @@ window.Hydralia = (function () {
     mapStateToValue,
     getWellness,
     generateTips,
+    computeHappiness,
+    getPlantMessage,
+    computeHomeInsights,
     computeAchievements,
+    renderPhotoTimeline,
+    renderWellnessRings,
+    renderHappinessBlock,
     renderWellnessBars,
     renderPlantSelect,
     getPlantById,
     formatDate,
     formatDateTime,
+    formatMonthLabel,
+    sortPhotoGallery,
   };
 })();

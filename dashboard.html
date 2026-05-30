@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Hydralia — Panel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
@@ -16,15 +16,16 @@
       <aside class="app-sidebar"><nav class="nav flex-column" id="hydralia-sidebar"></nav></aside>
       <main class="app-main">
         <h2 class="mb-4">Panel principal</h2>
+        <div id="dashboard-dynamic-msg" class="dynamic-msg-banner mb-4"></div>
         <div class="row mb-4">
-          <div class="col-md-3 mb-3"><div class="card hydralia-card stat-card"><h6>Plantas</h6><h2 id="stat-plants">0</h2></div></div>
-          <div class="col-md-3 mb-3"><div class="card hydralia-card stat-card"><h6>Saludables</h6><h2 id="stat-healthy">0</h2></div></div>
-          <div class="col-md-3 mb-3"><div class="card hydralia-card stat-card"><h6>Atención</h6><h2 id="stat-attention">0</h2></div></div>
-          <div class="col-md-3 mb-3"><div class="card hydralia-card stat-card"><h6>Próximo riego</h6><h2 id="stat-next" style="font-size:1.3rem">—</h2></div></div>
+          <div class="col-md-3 mb-3"><div class="insight-card insight-card--plants"><span class="insight-icon">🌱</span><div><div class="insight-value" id="stat-plants">0</div><div class="insight-label">Plantas</div></div></div></div>
+          <div class="col-md-3 mb-3"><div class="insight-card insight-card--water"><span class="insight-icon">💧</span><div><div class="insight-value" id="stat-water-today">0</div><div class="insight-label">Agua hoy</div></div></div></div>
+          <div class="col-md-3 mb-3"><div class="insight-card insight-card--sun"><span class="insight-icon">☀️</span><div><div class="insight-value" id="stat-needs-light">0</div><div class="insight-label">Más luz</div></div></div></div>
+          <div class="col-md-3 mb-3"><div class="insight-card insight-card--health"><span class="insight-icon">🟢</span><div><div class="insight-value" id="stat-avg-health">0%</div><div class="insight-label">Salud media</div></div></div></div>
         </div>
         <div class="row">
           <div class="col-lg-6 mb-4">
-            <div class="card hydralia-card p-3">
+            <div class="card hydralia-card card-section card-section--health p-3">
               <h6>Hidratación / Salud por planta</h6>
               <div class="chart-wrap">
                 <canvas id="chartHydration"></canvas>
@@ -32,24 +33,24 @@
             </div>
           </div>
           <div class="col-lg-6 mb-4">
-            <div class="card hydralia-card p-3">
-              <h6>Frecuencia de riego (4 semanas)</h6>
+            <div class="card hydralia-card card-section card-section--water p-3">
+              <h6>💧 Frecuencia de riego (4 semanas)</h6>
               <div class="chart-wrap">
                 <canvas id="chartRiegos"></canvas>
               </div>
             </div>
           </div>
           <div class="col-lg-6 mb-4">
-            <div class="card hydralia-card p-3">
-              <h6>Gráfica de crecimiento</h6>
+            <div class="card hydralia-card card-section card-section--health p-3">
+              <h6>🌱 Gráfica de crecimiento</h6>
               <div class="chart-wrap">
                 <canvas id="chartGrowth"></canvas>
               </div>
             </div>
           </div>
           <div class="col-lg-6 mb-4">
-            <div class="card hydralia-card p-3">
-              <h5>Logros</h5>
+            <div class="card hydralia-card card-section card-section--gold p-3">
+              <h5>🏆 Logros</h5>
               <div id="achievements-preview"></div>
               <a href="logros.html" class="btn btn-sm btn-outline-primary">Ver todos</a>
             </div>
