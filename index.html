@@ -21,9 +21,11 @@
       <h6 class="text-uppercase hero-eyebrow" style="letter-spacing:4px">Diario Inteligente</h6>
       <h1 class="hero-title mb-3">Cuida tus plantas con inteligencia</h1>
       <p class="lead mx-auto hero-subtitle mb-4" style="max-width:560px">Registra tus plantas, controla riegos y recibe recomendaciones personalizadas.</p>
+      <div id="hero-streak" class="hero-streak-wrap mx-auto mb-4"></div>
       <div class="hero-actions">
         <a href="plantas.html" class="btn btn-light">🪴 Ver mis plantas</a>
         <a href="dashboard.html" class="btn btn-primary">Ir al panel</a>
+        <button type="button" class="btn btn-outline-light auth-only-toggle d-none" data-toggle="modal" data-target="#modalAddPlant">+ Añadir planta</button>
       </div>
     </div>
   </section>
@@ -162,10 +164,10 @@
   <div class="container pb-5">
     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
       <h4 class="mb-0">Tus plantas</h4>
-      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAddPlant">🪴 + Añadir planta</button>
+      <button type="button" class="btn btn-primary btn-sm auth-only-toggle d-none" data-toggle="modal" data-target="#modalAddPlant">🪴 + Añadir planta</button>
     </div>
     <div id="home-plants"></div>
-    <a href="plantas.html" class="btn btn-outline-primary btn-sm mt-2">🪴 Ver todas las plantas →</a>
+    <a href="plantas.html" class="btn btn-outline-primary btn-sm mt-2 auth-only-toggle d-none">🪴 Ver todas las plantas →</a>
   </div>
 
   <div id="modals-container"></div>
@@ -180,6 +182,5 @@
   <script src="js/app.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/main.js"></script>
-  <script>$("#modals-container").load("partials/modals.html");</script>
 </body>
 </html>

@@ -51,15 +51,23 @@ window.HydraliaLayout = (function () {
       .join("");
 
     const session = window.HydraliaAuth && HydraliaAuth.getSession();
-    const userLabel = session ? session.name.split(" ")[0] : "";
+    const firstName = session ? session.name.split(" ")[0] : "";
     const userBlock = session
-      ? `<a href="perfil.html" class="navbar-user-pill mr-1 d-none d-md-inline-flex" title="${session.name}">👤 ${userLabel}</a>
-         <button type="button" class="btn btn-sm btn-outline-secondary navbar-logout-btn btn-logout mr-1" title="Cerrar sesión">Salir</button>`
-      : "";
+      ? `<div class="dropdown navbar-user-dropdown mr-1">
+           <button type="button" class="btn btn-sm navbar-user-greeting dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+             Hola, ${firstName}
+           </button>
+           <div class="dropdown-menu dropdown-menu-right">
+             <a href="perfil.html" class="dropdown-item">👤 Mi perfil</a>
+             <div class="dropdown-divider"></div>
+             <button type="button" class="dropdown-item text-danger btn-logout">Cerrar sesión</button>
+           </div>
+         </div>`
+      : `<button type="button" class="btn btn-sm btn-primary navbar-login-btn mr-1" data-auth-open="login">Entrar</button>`;
 
-    const mobileLogout = session
+    const mobileAuthLink = session
       ? `<button type="button" class="nav-link nav-link-mobile nav-link-logout btn-logout">🚪 Cerrar sesión</button>`
-      : "";
+      : `<button type="button" class="nav-link nav-link-mobile" data-auth-open="login">👤 Iniciar sesión</button>`;
 
     return `
     <div class="hydralia-navbar-wrap">
@@ -87,7 +95,7 @@ window.HydraliaLayout = (function () {
               </div>
             </div>
             <div class="navbar-nav-mobile">
-              ${mobileLogout}
+              ${mobileAuthLink}
               ${mobileMenuLinks}
             </div>
           </div>

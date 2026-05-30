@@ -2,63 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>Hydralia — Crear cuenta</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link href="css/style.css" rel="stylesheet">
-  <link href="css/hydralia.css" rel="stylesheet">
+  <title>Hydralia — Redirigiendo…</title>
+  <meta http-equiv="refresh" content="0;url=index.html?auth=registro">
+  <script>location.replace("index.html?auth=registro");</script>
 </head>
-<body class="auth-page" data-page="registro">
-  <div class="auth-page-wrap">
-    <div class="auth-topbar">
-      <a href="login.html" class="auth-logo-link">
-        <img src="img/hydralia-logo-nav.png?v=5" alt="Hydralia" class="auth-logo" />
-      </a>
-      <button type="button" id="btnToggleDark" class="btn btn-sm btn-outline-secondary navbar-dark-btn" title="Modo oscuro" aria-label="Cambiar modo oscuro">🌙</button>
-    </div>
-
-    <div class="auth-card hydralia-card">
-      <h1 class="auth-title">Crear cuenta</h1>
-      <p class="auth-subtitle text-muted">Regístrate para probar Hydralia en tu navegador</p>
-
-      <div class="auth-demo-notice">
-        <strong>Solo demostración</strong>
-        <p class="mb-0 small">Puedes crear cuentas libremente; los datos quedan en <code>localStorage</code> de este dispositivo.</p>
-      </div>
-
-      <div id="auth-error" class="alert alert-danger d-none" role="alert"></div>
-
-      <form id="form-registro" novalidate>
-        <div class="form-group">
-          <label for="reg-name">Nombre</label>
-          <input type="text" class="form-control" id="reg-name" placeholder="Tu nombre" required autocomplete="name">
-        </div>
-        <div class="form-group">
-          <label for="reg-email">Correo electrónico</label>
-          <input type="email" class="form-control" id="reg-email" placeholder="tu@correo.com" required autocomplete="email">
-        </div>
-        <div class="form-group">
-          <label for="reg-password">Contraseña</label>
-          <input type="password" class="form-control" id="reg-password" placeholder="Mínimo 4 caracteres" required autocomplete="new-password">
-        </div>
-        <div class="form-group">
-          <label for="reg-password2">Repetir contraseña</label>
-          <input type="password" class="form-control" id="reg-password2" placeholder="Repite la contraseña" required autocomplete="new-password">
-        </div>
-        <button type="submit" class="btn btn-primary btn-block auth-submit">Crear cuenta</button>
-      </form>
-
-      <p class="auth-switch mb-0">
-        ¿Ya tienes cuenta?
-        <a href="login.html">Iniciar sesión</a>
-      </p>
-    </div>
-  </div>
-
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/main.js"></script>
-</body>
+<body></body>
 </html>

@@ -17,31 +17,78 @@
   "use strict";
 
   const page = document.body.dataset.page || "inicio";
-  const isAuthPage = page === "login" || page === "registro";
 
   if (window.HydraliaAuth) {
     HydraliaAuth.ensureDemoUser();
-    if (isAuthPage) {
-      if (HydraliaAuth.isLoggedIn()) {
-        location.href = "index.html";
-        return;
-      }
-      HydraliaAuth.initAuthPage(page);
-      return;
-    }
-    if (!HydraliaAuth.isLoggedIn()) {
-      const redirect = encodeURIComponent(
-        (location.pathname.split("/").pop() || "index.html") + location.search,
-      );
-      location.href = "login.html?redirect=" + redirect;
-      return;
-    }
   }
 
   const H = window.Hydralia;
   if (!H) return;
 
-  H.ensureSampleData();
+  if (window.HydraliaAuth && HydraliaAuth.isLoggedIn()) {
+    H.ensureSampleData();
+  }
+
+  function userLoggedIn() {
+    return window.HydraliaAuth && HydraliaAuth.isLoggedIn();
+  }
+
+  function ensureModals(done) {
+    let $c = $("#modals-container");
+    if (!$c.length) {
+      $c = $('<div id="modals-container"></div>').appendTo("body");
+    }
+    if ($c.data("loaded")) {
+      if (window.HydraliaAuth) HydraliaAuth.initModals();
+      done && done();
+      return;
+    }
+    $c.load("partials/modals.html", function () {
+      $c.data("loaded", true);
+      if (window.HydraliaAuth) HydraliaAuth.initModals();
+      done && done();
+    });
+  }
+
+  function renderGuestBlock($el, message) {
+    if (!$el || !$el.length) return;
+    $el.html(`
+      <div class="guest-empty hydralia-card text-center p-4">
+        <div class="guest-empty-icon mb-2">🌱</div>
+        <p class="text-muted mb-3">${message}</p>
+        <button type="button" class="btn btn-primary btn-sm" data-auth-open="login">Iniciar sesión</button>
+        <button type="button" class="btn btn-outline-primary btn-sm ml-1 ml-sm-2 mt-2 mt-sm-0" data-auth-open="registro">Crear cuenta</button>
+      </div>`);
+  }
+
+  function renderHeroStreak() {
+    const $el = $("#hero-streak");
+    if (!$el.length) return;
+    if (!userLoggedIn()) {
+      $el.html(`
+        <div class="hero-streak-box hero-streak-box--guest">
+          <div class="hero-streak-label">🔥 Racha de cuidado</div>
+          <div class="hero-streak-value">—</div>
+          <p class="hero-streak-msg mb-2">Inicia sesión para registrar tu racha de días cuidando plantas.</p>
+          <button type="button" class="btn btn-sm btn-light" data-auth-open="login">Entrar</button>
+        </div>`);
+      return;
+    }
+    const plants = H.loadPlants();
+    const streak = H.computeCareStreak(plants);
+    const msg = H.getStreakMessage(streak);
+    $el.html(`
+      <div class="hero-streak-box">
+        <div class="hero-streak-label">🔥 Racha de cuidado</div>
+        <div class="hero-streak-value">${streak} <span class="hero-streak-unit">${streak === 1 ? "día" : "días"}</span></div>
+        <p class="hero-streak-msg mb-0">${msg}</p>
+      </div>`);
+  }
+
+  function updateGuestUI() {
+    $(".auth-only-toggle").toggleClass("d-none", !userLoggedIn());
+    renderHeroStreak();
+  }
 
   if (window.HydraliaLayout) HydraliaLayout.initNav(page);
 
@@ -76,6 +123,7 @@
   }
 
   function renderStats() {
+    if (!userLoggedIn()) return;
     const plants = H.loadPlants();
     const insights = H.computeHomeInsights(plants);
     const healthy = plants.filter(
@@ -106,6 +154,12 @@
     const $grid = $("#home-insights");
     const $banner = $("#home-dynamic-msg");
     if (!$grid.length) return;
+    if (!userLoggedIn()) {
+      if ($banner.length) $banner.empty().hide();
+      renderGuestBlock($grid, "Inicia sesión para ver el resumen de tus plantas, riegos y salud del jardín.");
+      return;
+    }
+    if ($banner.length) $banner.show();
     const plants = H.loadPlants();
     const insights = H.computeHomeInsights(plants);
     const healthy = plants.filter(
@@ -187,6 +241,11 @@
 
   function renderHomePlantChips($el, limit) {
     limit = limit || 2;
+    if (!$el.length) return;
+    if (!userLoggedIn()) {
+      renderGuestBlock($el, "Aquí verás un acceso rápido a tus plantas cuando inicies sesión.");
+      return;
+    }
     const plants = H.loadPlants();
     $el.empty();
     if (!plants.length) {
@@ -425,6 +484,7 @@
   });
 
   function populatePlantSelects() {
+    if (!userLoggedIn()) return;
     const plants = H.loadPlants();
     const opts = plants.map((p) => `<option value="${p.id}">${p.name}</option>`).join("");
     $("#plant-select-riego-modal, #plant-select-riego").html(opts);
@@ -783,7 +843,20 @@
 
   $(document).on("click", ".btn-logout", function () {
     if (window.HydraliaAuth) HydraliaAuth.logout();
-    location.href = "login.html";
+    if (page === "inicio") {
+      HydraliaLayout.initNav(page);
+      updateGuestUI();
+      initCurrentPage();
+    } else {
+      location.href = "index.html";
+    }
+  });
+
+  $(document).on("click", "[data-auth-open]", function () {
+    const mode = $(this).data("auth-open") || "login";
+    ensureModals(function () {
+      HydraliaAuth.openModal(mode);
+    });
   });
 
   $(document).on("click", ".reminder-done", function () {
@@ -798,16 +871,34 @@
   /* ── Páginas ── */
   const pages = {
     inicio: function () {
+      renderHeroStreak();
+      updateGuestUI();
       renderHomeInsights();
       renderHomePlantChips($("#home-plants"), 2);
       initTipShowcase();
     },
 
     plantas: function () {
-      renderPlantCards($("#plant-list"), { showDelete: true, showGallery: true });
+      const $list = $("#plant-list");
+      if (!userLoggedIn()) {
+        renderGuestBlock($list, "Inicia sesión para ver y gestionar tus plantas.");
+        return;
+      }
+      renderPlantCards($list, { showDelete: true, showGallery: true });
     },
 
     dashboard: function () {
+      const $main = $(".app-main");
+      if (!userLoggedIn()) {
+        $main.children().not("h2").hide();
+        if (!$("#guest-prompt").length) {
+          $main.append('<div id="guest-prompt" class="mb-4"></div>');
+        }
+        renderGuestBlock($("#guest-prompt"), "Inicia sesión para ver gráficos, logros y recordatorios.");
+        return;
+      }
+      $("#guest-prompt").remove();
+      $main.children().show();
       renderStats();
       renderAchievementsPreview($("#achievements-preview"), 2);
       renderRemindersPreview($("#reminders-preview"), 2);
@@ -1113,6 +1204,18 @@
     },
 
     perfil: function () {
+      const $main = $(".container.py-4").first();
+      if (!userLoggedIn()) {
+        $main.find(".row, .profile-hero, .auth-demo-notice--inline").hide();
+        if (!$("#guest-prompt").length) {
+          $main.prepend('<div id="guest-prompt" class="mb-4"></div>');
+        }
+        renderGuestBlock($("#guest-prompt"), "Inicia sesión para ver tu perfil y resumen de actividad.");
+        return;
+      }
+      $("#guest-prompt").remove();
+      $main.find(".row, .profile-hero, .auth-demo-notice--inline").show();
+
       const user = window.HydraliaAuth && HydraliaAuth.getCurrentUser();
       const session = window.HydraliaAuth && HydraliaAuth.getSession();
       if (user && session) {
@@ -1266,9 +1369,22 @@
 
   window.addEventListener("hydralia:updated", initCurrentPage);
   window.addEventListener("hydralia:theme-changed", applyChartTheme);
+  window.addEventListener("hydralia:auth-changed", function () {
+    if (window.HydraliaAuth && HydraliaAuth.isLoggedIn()) H.ensureSampleData();
+    if (window.HydraliaLayout) HydraliaLayout.initNav(page);
+    updateGuestUI();
+    initCurrentPage();
+  });
 
   $(function () {
-    initCurrentPage();
+    ensureModals(function () {
+      initCurrentPage();
+      updateGuestUI();
+      const params = new URLSearchParams(location.search);
+      if (params.get("auth") === "login" || params.get("auth") === "registro") {
+        HydraliaAuth.openModal(params.get("auth"));
+      }
+    });
     $(document).on("shown.bs.modal", "#modalAddRiego", populatePlantSelects);
   });
 })();

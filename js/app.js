@@ -107,7 +107,7 @@ window.Hydralia = (function () {
     window.dispatchEvent(new Event("hydralia:updated"));
   }
 
-  const DEMO_VERSION = "6";
+  const DEMO_VERSION = "7";
 
   function ensureSampleData() {
     const versionKey = demoVersionKey();
@@ -142,6 +142,24 @@ window.Hydralia = (function () {
     const now = new Date();
     const daysAgo = (d) =>
       new Date(now.getFullYear(), now.getMonth(), now.getDate() - d).toISOString();
+
+    const streakHistory = (count) => {
+      const notes = [
+        "Riego de hoy — racha activa",
+        "Riego y revisión de hojas",
+        "Agua filtrada, suelo húmedo",
+        "Riego ligero por la mañana",
+        "Control de humedad del sustrato",
+        "Riego completo en maceta",
+        "Riego y limpieza de hojas",
+      ];
+      return Array.from({ length: count }, (_, i) => ({
+        date: daysAgo(i),
+        amount: i === 0 ? "180 ml" : "150 ml",
+        method: "Regadera",
+        notes: notes[i] || "Riego diario de la racha",
+      }));
+    };
 
     const p1 = {
       id: "sample_1",
@@ -196,17 +214,12 @@ window.Hydralia = (function () {
       },
       wellness: { health: 90, hydration: 70, sun: 85 },
       history: [
+        ...streakHistory(7),
         {
-          date: daysAgo(7),
+          date: daysAgo(12),
           amount: "200 ml",
           method: "Regadera",
-          notes: "Riego completo",
-        },
-        {
-          date: daysAgo(2),
-          amount: "150 ml",
-          method: "Regadera",
-          notes: "Agua filtrada",
+          notes: "Riego profundo semanal",
         },
       ],
       nextWater: daysAgo(-3),
@@ -367,8 +380,13 @@ window.Hydralia = (function () {
     savePlants([p1, p2, p3, p4, p5]);
 
     const events = [
-      { id: uid("ev_"), plantId: "sample_1", type: "riego", date: daysAgo(2), title: "Riego Potus" },
-      { id: uid("ev_"), plantId: "sample_1", type: "riego", date: daysAgo(7), title: "Riego Potus" },
+      ...Array.from({ length: 7 }, (_, i) => ({
+        id: uid("ev_"),
+        plantId: "sample_1",
+        type: "riego",
+        date: daysAgo(i),
+        title: i === 0 ? "Riego Potus (hoy)" : "Riego Potus — racha día " + (7 - i),
+      })),
       { id: uid("ev_"), plantId: "sample_2", type: "riego", date: daysAgo(5), title: "Riego Suculenta" },
       { id: uid("ev_"), plantId: "sample_3", type: "riego", date: daysAgo(3), title: "Riego Monstera" },
       { id: uid("ev_"), plantId: "sample_4", type: "riego", date: daysAgo(12), title: "Riego Sansevieria" },
@@ -885,6 +903,47 @@ window.Hydralia = (function () {
     return new Date(iso).toLocaleString("es-ES");
   }
 
+  function dayKey(date) {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    return d.toDateString();
+  }
+
+  function computeCareStreak(plants) {
+    const activityDates = new Set();
+    (plants || []).forEach((p) => {
+      (p.history || []).forEach((h) => {
+        if (h.date) activityDates.add(dayKey(h.date));
+      });
+    });
+    loadEvents().forEach((ev) => {
+      if (ev.date) activityDates.add(dayKey(ev.date));
+    });
+
+    if (!activityDates.size) return 0;
+
+    const cursor = new Date();
+    cursor.setHours(0, 0, 0, 0);
+    if (!activityDates.has(cursor.toDateString())) {
+      cursor.setDate(cursor.getDate() - 1);
+    }
+
+    let streak = 0;
+    while (activityDates.has(cursor.toDateString())) {
+      streak++;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    return streak;
+  }
+
+  function getStreakMessage(streak) {
+    if (!streak) return "Registra un riego hoy y empieza tu racha.";
+    if (streak === 1) return "¡Buen comienzo! Sigue cuidando tus plantas.";
+    if (streak < 7) return "¡Vas genial! Sigue así.";
+    if (streak < 14) return "¡Una semana entera! Sigue así.";
+    return "¡Racha impresionante! Eres un crack del cuidado.";
+  }
+
   return {
     STORAGE_KEY,
     HERO_TIPS,
@@ -916,5 +975,7 @@ window.Hydralia = (function () {
     formatDateTime,
     formatMonthLabel,
     sortPhotoGallery,
+    computeCareStreak,
+    getStreakMessage,
   };
 })();

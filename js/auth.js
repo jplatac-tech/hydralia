@@ -136,78 +136,80 @@ window.HydraliaAuth = (function () {
 
   function logout() {
     clearSession();
+    window.dispatchEvent(new Event("hydralia:auth-changed"));
   }
 
-  function redirectAfterAuth() {
-    const params = new URLSearchParams(location.search);
-    const target = params.get("redirect");
-    if (target && !target.includes("login") && !target.includes("registro")) {
-      location.href = target;
+  function showModalError(message) {
+    const $err = $("#auth-modal-error");
+    if (!$err.length) return;
+    $err.removeClass("d-none").text(message);
+  }
+
+  function clearModalError() {
+    $("#auth-modal-error").addClass("d-none").text("");
+  }
+
+  function openModal(mode) {
+    mode = mode === "registro" ? "registro" : "login";
+    clearModalError();
+    if (mode === "registro") {
+      $("#auth-tab-registro").tab("show");
+      $("#modalAuthTitle").text("Crear cuenta");
     } else {
-      location.href = "index.html";
+      $("#auth-tab-login").tab("show");
+      $("#modalAuthTitle").text("Iniciar sesión");
     }
+    $("#modalAuth").modal("show");
   }
 
-  function initDarkModeToggle() {
-    const KEY = "hydralia_dark_mode";
-    const btn = document.getElementById("btnToggleDark");
-    function apply(isDark) {
-      document.body.classList.toggle("dark-mode", isDark);
-      if (btn) btn.textContent = isDark ? "☀️" : "🌙";
-    }
-    apply(localStorage.getItem(KEY) === "1");
-    if (btn) {
-      btn.addEventListener("click", function () {
-        const now = !document.body.classList.contains("dark-mode");
-        apply(now);
-        localStorage.setItem(KEY, now ? "1" : "0");
-      });
-    }
+  function onAuthSuccess() {
+    clearModalError();
+    $("#modalAuth").modal("hide");
+    window.dispatchEvent(new Event("hydralia:auth-changed"));
   }
 
-  function showAuthError($el, message) {
-    if (!$el || !$el.length) return;
-    $el.removeClass("d-none").text(message);
-  }
+  let modalsBound = false;
 
-  function initAuthPage(page) {
-    initDarkModeToggle();
+  function initModals() {
+    if (modalsBound || !$("#modalAuth").length) return;
+    modalsBound = true;
 
-    if (page === "login") {
-      const $form = $("#form-login");
-      const $err = $("#auth-error");
-      $form.on("submit", function (e) {
-        e.preventDefault();
-        $err.addClass("d-none");
-        const result = login($("#login-email").val(), $("#login-password").val());
-        if (!result.ok) {
-          showAuthError($err, result.error);
-          return;
-        }
-        redirectAfterAuth();
-      });
-    }
+    $("#form-login").on("submit", function (e) {
+      e.preventDefault();
+      clearModalError();
+      const result = login($("#login-email").val(), $("#login-password").val());
+      if (!result.ok) {
+        showModalError(result.error);
+        return;
+      }
+      onAuthSuccess();
+    });
 
-    if (page === "registro") {
-      const $form = $("#form-registro");
-      const $err = $("#auth-error");
-      $form.on("submit", function (e) {
-        e.preventDefault();
-        $err.addClass("d-none");
-        const pass = $("#reg-password").val();
-        const pass2 = $("#reg-password2").val();
-        if (pass !== pass2) {
-          showAuthError($err, "Las contraseñas no coinciden.");
-          return;
-        }
-        const result = register($("#reg-name").val(), $("#reg-email").val(), pass);
-        if (!result.ok) {
-          showAuthError($err, result.error);
-          return;
-        }
-        redirectAfterAuth();
-      });
-    }
+    $("#form-registro").on("submit", function (e) {
+      e.preventDefault();
+      clearModalError();
+      const pass = $("#reg-password").val();
+      const pass2 = $("#reg-password2").val();
+      if (pass !== pass2) {
+        showModalError("Las contraseñas no coinciden.");
+        return;
+      }
+      const result = register($("#reg-name").val(), $("#reg-email").val(), pass);
+      if (!result.ok) {
+        showModalError(result.error);
+        return;
+      }
+      onAuthSuccess();
+    });
+
+    $('a[data-toggle="pill"]').on("shown.bs.tab", function (e) {
+      clearModalError();
+      if (e.target.id === "auth-tab-registro") {
+        $("#modalAuthTitle").text("Crear cuenta");
+      } else {
+        $("#modalAuthTitle").text("Iniciar sesión");
+      }
+    });
   }
 
   ensureDemoUser();
@@ -225,6 +227,7 @@ window.HydraliaAuth = (function () {
     register,
     login,
     logout,
-    initAuthPage,
+    openModal,
+    initModals,
   };
 })();
