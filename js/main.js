@@ -1376,6 +1376,12 @@
     initCurrentPage();
   });
 
+  window.addEventListener("resize", function () {
+    if (window.HydraliaLayout && HydraliaLayout.syncNavHeight) {
+      HydraliaLayout.syncNavHeight();
+    }
+  });
+
   $(function () {
     ensureModals(function () {
       initCurrentPage();
@@ -1386,5 +1392,10 @@
       }
     });
     $(document).on("shown.bs.modal", "#modalAddRiego", populatePlantSelects);
+    $(document).on("shown.bs.collapse hidden.bs.collapse", "#navbarCollapse", function () {
+      if (window.HydraliaLayout && HydraliaLayout.syncNavHeight) {
+        HydraliaLayout.syncNavHeight();
+      }
+    });
   });
 })();
