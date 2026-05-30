@@ -22,7 +22,7 @@
       <h1 class="hero-title mb-3">Cuida tus plantas con inteligencia</h1>
       <p class="lead mx-auto hero-subtitle mb-4" style="max-width:560px">Registra tus plantas, controla riegos y recibe recomendaciones personalizadas.</p>
       <div class="hero-actions">
-        <a href="plantas.html" class="btn btn-light">Ver mis plantas</a>
+        <a href="plantas.html" class="btn btn-light">🪴 Ver mis plantas</a>
         <a href="dashboard.html" class="btn btn-primary">Ir al panel</a>
       </div>
     </div>
@@ -63,8 +63,21 @@
 
   <!-- Módulos -->
   <div class="container pb-5">
-    <h3 class="mb-4 text-center">Explora los módulos</h3>
-    <div class="row module-grid">
+    <h3 class="mb-3 text-center">Explora los módulos</h3>
+    <div class="module-badges-mobile">
+      <a href="plantas.html" class="module-badge module-badge--health">🪴 Plantas</a>
+      <a href="riego.html" class="module-badge module-badge--water">💧 Riego</a>
+      <a href="calendario.html" class="module-badge module-badge--calendar">📅 Calendario</a>
+      <a href="recordatorios.html" class="module-badge">🔔 Recordatorios</a>
+      <a href="dashboard.html" class="module-badge">📊 Panel</a>
+      <a href="suelo.html" class="module-badge">🌍 Suelo</a>
+      <a href="hojas.html" class="module-badge">🍃 Hojas</a>
+      <a href="estado.html" class="module-badge">❤️ Estado</a>
+      <a href="consejos.html" class="module-badge">💡 Consejos</a>
+      <a href="logros.html" class="module-badge module-badge--gold">🏆 Logros</a>
+      <a href="diagnostico.html" class="module-badge">🔍 Diagnóstico</a>
+    </div>
+    <div class="row module-grid module-grid-desktop">
       <div class="col-md-4 col-sm-6 mb-4">
         <a href="plantas.html" class="hydralia-card module-card module-card--health">
           <div class="module-icon">🪴</div>
@@ -149,10 +162,10 @@
   <div class="container pb-5">
     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
       <h4 class="mb-0">Tus plantas</h4>
-      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAddPlant">+ Añadir planta</button>
+      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAddPlant">🪴 + Añadir planta</button>
     </div>
     <div id="home-plants"></div>
-    <a href="plantas.html" class="btn btn-outline-primary mt-2">Gestionar plantas →</a>
+    <a href="plantas.html" class="btn btn-outline-primary btn-sm mt-2">🪴 Ver todas las plantas →</a>
   </div>
 
   <div id="modals-container"></div>

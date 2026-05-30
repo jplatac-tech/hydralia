@@ -25,10 +25,28 @@ window.HydraliaLayout = (function () {
 
   function renderTopNav(activePage) {
     const mainPages = ["inicio", "plantas", "calendario", "recordatorios", "dashboard"];
-    const links = MODULE_LINKS.filter((l) => mainPages.includes(l.page))
+    const bottomPages = BOTTOM_NAV.map((l) => l.page);
+
+    const desktopLinks = MODULE_LINKS.filter((l) => mainPages.includes(l.page))
       .map(
         (l) =>
           `<a href="${l.href}" class="nav-item nav-link${l.page === activePage ? " active" : ""}">${l.label}</a>`,
+      )
+      .join("");
+
+    const dropdownItems = MODULE_LINKS.filter(
+      (l) => !mainPages.includes(l.page) && l.page !== "perfil",
+    )
+      .map(
+        (l) =>
+          `<a href="${l.href}" class="dropdown-item${l.page === activePage ? " active" : ""}">${l.icon} ${l.label}</a>`,
+      )
+      .join("");
+
+    const mobileMenuLinks = MODULE_LINKS.filter((l) => !bottomPages.includes(l.page))
+      .map(
+        (l) =>
+          `<a href="${l.href}" class="nav-link nav-link-mobile${l.page === activePage ? " active" : ""}">${l.icon} ${l.label}</a>`,
       )
       .join("");
 
@@ -40,25 +58,24 @@ window.HydraliaLayout = (function () {
           <a href="index.html" class="navbar-brand hydralia-brand">
             <img src="img/hydralia-logo-nav.png?v=5" alt="Hydralia" class="brand-logo" width="564" height="159" />
           </a>
-          <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
-            <div class="navbar-nav ml-auto py-0">${links}
-              <div class="nav-item dropdown">
+          <div class="navbar-toolbar ml-auto d-flex align-items-center">
+            <button type="button" id="btnToggleDark" class="btn btn-sm btn-outline-secondary navbar-dark-btn" title="Modo oscuro" aria-label="Cambiar modo oscuro">🌙</button>
+            <button type="button" class="navbar-toggler ml-2" data-toggle="collapse" data-target="#navbarCollapse" aria-label="Abrir menú">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+          <div class="collapse navbar-collapse px-3" id="navbarCollapse">
+            <div class="navbar-nav navbar-nav-desktop ml-auto py-0">
+              ${desktopLinks}
+              <div class="nav-item dropdown nav-modules-dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Módulos</a>
                 <div class="dropdown-menu border-0 rounded-0 m-0">
-                  ${MODULE_LINKS.filter((l) => !mainPages.includes(l.page) && l.page !== "perfil")
-                    .map(
-                      (l) =>
-                        `<a href="${l.href}" class="dropdown-item${l.page === activePage ? " active" : ""}">${l.icon} ${l.label}</a>`,
-                    )
-                    .join("")}
+                  ${dropdownItems}
                 </div>
               </div>
             </div>
-            <div class="ml-3 d-flex align-items-center">
-              <button id="btnToggleDark" class="btn btn-sm btn-outline-secondary" title="Modo oscuro">🌙</button>
+            <div class="navbar-nav-mobile">
+              ${mobileMenuLinks}
             </div>
           </div>
         </nav>

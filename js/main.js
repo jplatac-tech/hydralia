@@ -162,15 +162,43 @@
       </div>`);
   }
 
-  function renderPlantCards($el, options) {
-    options = options || {};
+  function renderHomePlantChips($el, limit) {
+    limit = limit || 2;
     const plants = H.loadPlants();
     $el.empty();
     if (!plants.length) {
+      $el.html('<p class="text-muted small mb-0">No hay plantas aún.</p>');
+      return;
+    }
+    const shown = plants.slice(0, limit);
+    const extra = plants.length - shown.length;
+    let html = '<div class="plant-chip-list">';
+    shown.forEach((p) => {
+      const happy = H.computeHappiness(p).score;
+      html += `
+        <a href="plantas.html" class="plant-chip">
+          <img src="${plantPhotoUrl(p.photo)}" alt="${p.name}" loading="lazy" />
+          <span class="plant-chip-name">${p.name}</span>
+          <span class="plant-chip-badge">🌟 ${happy}%</span>
+        </a>`;
+    });
+    html += "</div>";
+    if (extra > 0) {
+      html += `<p class="text-muted small mt-2 mb-0">y ${extra} planta${extra > 1 ? "s" : ""} más</p>`;
+    }
+    $el.html(html);
+  }
+
+  function renderPlantCards($el, options) {
+    options = options || {};
+    const plants = H.loadPlants();
+    const list = options.limit ? plants.slice(0, options.limit) : plants;
+    $el.empty();
+    if (!list.length) {
       $el.html('<p class="text-muted">No hay plantas registradas.</p>');
       return;
     }
-    plants.forEach((p) => {
+    list.forEach((p) => {
       const avg = H.computeAvgRiegoDays(p);
       const days = H.daysSinceLastRiego(p);
       const freqText =
@@ -182,8 +210,8 @@
         ? renderTipBanner(tips[0].text, "Consejo para " + p.name)
         : "";
       const actions = options.actions !== false
-        ? `<div class="mt-2 plant-card-actions">
-            <button class="btn btn-sm btn-outline-primary btn-record" data-id="${p.id}">Registrar riego</button>
+        ? `<div class="mt-2 plant-card-actions plant-card-actions--compact">
+            <button class="btn btn-sm btn-outline-primary btn-record" data-id="${p.id}">💧 Riego</button>
             <a href="riego.html?plant=${p.id}" class="btn btn-sm btn-outline-secondary">Historial</a>
             ${options.showDelete ? `<button class="btn btn-sm btn-outline-danger btn-delete" data-id="${p.id}">Eliminar</button>` : ""}
           </div>`
@@ -705,7 +733,7 @@
   const pages = {
     inicio: function () {
       renderHomeInsights();
-      renderPlantCards($("#home-plants"), { actions: false, showHappiness: false });
+      renderHomePlantChips($("#home-plants"), 2);
       initTipShowcase();
     },
 
@@ -717,7 +745,7 @@
       renderStats();
       const insights = H.computeHomeInsights(H.loadPlants());
       $("#dashboard-dynamic-msg").html(`<p class="mb-0">${insights.bannerMessage}</p>`);
-      renderPlantCards($("#dashboard-plants"), { actions: true, showHappiness: false });
+      renderHomePlantChips($("#dashboard-plants"), 3);
       const plants = H.loadPlants();
       const $ach = $("#achievements-preview");
       if ($ach.length) {

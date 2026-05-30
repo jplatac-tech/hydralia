@@ -172,6 +172,44 @@ body {
   border-color: rgba(63, 74, 58, 0.25);
 }
 
+.navbar-toolbar {
+  flex-shrink: 0;
+}
+
+.navbar-dark-btn {
+  min-width: 40px;
+  padding: 0.35rem 0.5rem;
+  line-height: 1;
+}
+
+.navbar-nav-mobile {
+  display: none;
+}
+
+.navbar-nav-desktop {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.nav-link-mobile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.5rem !important;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(138, 165, 123, 0.12);
+}
+
+.nav-link-mobile:last-child {
+  border-bottom: none;
+}
+
+.nav-link-mobile.active {
+  color: var(--sage-dark) !important;
+  font-weight: 600;
+}
+
 /* Logo transparente — sin caja visible */
 .navbar-brand.hydralia-brand {
   display: flex;
@@ -212,6 +250,49 @@ body {
   .dark-mode .hydralia-navbar .navbar-collapse {
     background: #0d1520;
     border-top-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .hydralia-navbar {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .navbar-nav-desktop {
+    display: none !important;
+  }
+
+  .navbar-nav-mobile {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .navbar-toggler {
+    padding: 0.35rem 0.5rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar-nav-mobile {
+    display: none !important;
+  }
+
+  .navbar-toolbar .navbar-toggler {
+    display: none;
+  }
+
+  .hydralia-navbar {
+    flex-wrap: nowrap;
+  }
+
+  .navbar-toolbar {
+    margin-left: 0 !important;
+    order: 3;
+  }
+
+  .navbar-collapse {
+    order: 2;
+    flex-grow: 1;
   }
 }
 
@@ -398,6 +479,91 @@ body {
   margin-bottom: 1rem;
 }
 
+/* Módulos compactos (móvil) */
+.module-badges-mobile {
+  display: none;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.module-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 99px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none !important;
+  color: #3f4a3a;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(63, 74, 58, 0.08);
+  border: 1px solid rgba(138, 165, 123, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.module-badge--health { border-color: rgba(138, 165, 123, 0.45); background: #f7fbf5; }
+.module-badge--water { border-color: rgba(91, 164, 201, 0.45); background: #f5fafd; }
+.module-badge--calendar { border-color: rgba(111, 150, 94, 0.45); background: #f5f9f3; }
+.module-badge--gold { border-color: rgba(201, 162, 39, 0.45); background: #fffbf2; }
+
+/* Chips de plantas (inicio / panel) */
+.plant-chip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.plant-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(63, 74, 58, 0.08);
+  text-decoration: none !important;
+  color: #3f4a3a;
+  border: 1px solid rgba(138, 165, 123, 0.15);
+}
+
+.plant-chip img {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.plant-chip-name {
+  flex: 1;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.plant-chip-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sage-dark);
+  white-space: nowrap;
+}
+
+.plant-card-actions--compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.plant-card-actions--compact .btn {
+  width: auto;
+  min-height: 32px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.78rem;
+  margin: 0 !important;
+}
+
 /* Sidebar navegación modular */
 .app-layout {
   display: flex;
@@ -447,45 +613,7 @@ body {
   }
 
   .app-sidebar {
-    width: 100%;
-    position: static;
-    padding: 0.65rem;
-    overflow: hidden;
-  }
-
-  .app-sidebar .nav {
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x proximity;
-    gap: 0.35rem;
-    padding-bottom: 0.15rem;
-    scrollbar-width: none;
-  }
-
-  .app-sidebar .nav::-webkit-scrollbar {
     display: none;
-  }
-
-  .app-sidebar .nav-link {
-    flex: 0 0 auto;
-    white-space: nowrap;
-    scroll-snap-align: start;
-    border-left: none !important;
-    border-bottom: none !important;
-    border-radius: 99px;
-    padding: 0.55rem 0.9rem;
-    font-size: 0.82rem;
-    background: var(--beige);
-  }
-
-  .app-sidebar .nav-link:hover,
-  .app-sidebar .nav-link.active {
-    background: var(--sage);
-    color: #fff;
-    border-left-color: transparent;
-    border-bottom-color: transparent;
   }
 }
 
@@ -1653,6 +1781,27 @@ body {
   color: #a8c49a;
 }
 
+.dark-mode .module-badge {
+  background: var(--surface);
+  color: #e6efe6;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .plant-chip {
+  background: var(--surface);
+  color: #e6efe6;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-mode .nav-link-mobile {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  color: #e6efe6 !important;
+}
+
+.dark-mode .nav-link-mobile.active {
+  color: #a8c49a !important;
+}
+
 .dark-mode .profile-hero {
   background: linear-gradient(135deg, #1a2332 0%, var(--surface) 60%);
 }
@@ -1812,6 +1961,34 @@ body {
   }
 
   /* Módulos */
+  .module-grid-desktop {
+    display: none !important;
+  }
+
+  .module-badges-mobile {
+    display: flex;
+  }
+
+  .dashboard-stats-row {
+    display: none;
+  }
+
+  .dashboard-plants-title {
+    font-size: 1rem;
+    margin-top: 0.5rem !important;
+  }
+
+  .plant-layout-mobile .plant-card-actions--compact {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .plant-layout-mobile .plant-card-actions--compact .btn {
+    width: auto;
+    min-height: 32px;
+    flex: 0 1 auto;
+  }
+
   .module-grid .hydralia-card {
     padding: 1rem;
   }
@@ -1872,13 +2049,14 @@ body {
 
   .plant-layout-mobile .plant-card-actions {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.35rem;
   }
 
   .plant-layout-mobile .plant-card-actions .btn {
-    width: 100%;
-    min-height: 44px;
+    width: auto;
+    min-height: 32px;
     margin: 0 !important;
   }
 
@@ -1894,6 +2072,13 @@ body {
     min-height: 44px;
     padding: 0.45rem 0.85rem;
     font-size: 0.875rem;
+  }
+
+  .plant-card-actions--compact .btn,
+  .plant-card-actions--compact .btn-sm {
+    min-height: 32px;
+    padding: 0.2rem 0.55rem;
+    font-size: 0.78rem;
   }
 
   /* Gráficas */
@@ -2051,19 +2236,6 @@ body {
 
   footer {
     margin-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
-  }
-
-  /* Ocultar links duplicados del navbar en móvil (barra inferior cubre lo principal) */
-  .hydralia-navbar .navbar-nav > .nav-link {
-    display: none;
-  }
-
-  .hydralia-navbar .navbar-nav .dropdown {
-    display: list-item;
-  }
-
-  .hydralia-navbar .navbar-nav .dropdown .nav-link {
-    display: block;
   }
 }
 
