@@ -120,8 +120,13 @@ window.HydraliaLayout = (function () {
 
   function syncNavHeight() {
     const wrap = document.querySelector(".hydralia-navbar-wrap");
-    if (!wrap) return;
-    document.documentElement.style.setProperty("--nav-height", wrap.offsetHeight + "px");
+    if (wrap) {
+      document.documentElement.style.setProperty("--nav-height", wrap.offsetHeight + "px");
+    }
+    const bottom = document.querySelector(".hydralia-bottom-nav");
+    if (bottom && window.getComputedStyle(bottom).display !== "none") {
+      document.documentElement.style.setProperty("--bottom-nav-height", bottom.offsetHeight + "px");
+    }
   }
 
   function initNav(activePage) {
@@ -138,6 +143,9 @@ window.HydraliaLayout = (function () {
       document.body.appendChild(bottomEl);
     }
     bottomEl.innerHTML = renderBottomNav(activePage);
+
+    syncNavHeight();
+    requestAnimationFrame(syncNavHeight);
 
     const sideEl = document.getElementById("hydralia-sidebar");
     if (sideEl) {

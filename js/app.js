@@ -944,6 +944,109 @@ window.Hydralia = (function () {
     return "¡Racha impresionante! Eres un crack del cuidado.";
   }
 
+  function getLastRiego(p) {
+    const hist = (p.history || []).slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+    return hist[0] || null;
+  }
+
+  function formatLeavesFlags(l) {
+    l = l || {};
+    const flags = [];
+    if (l.spots) flags.push("Manchas");
+    if (l.dry) flags.push("Secas");
+    if (l.yellow) flags.push("Amarillas");
+    if (l.falling) flags.push("Caída");
+    if (l.pests) flags.push("Plagas");
+    return flags.length ? flags.join(", ") : "Sin alertas";
+  }
+
+  function renderModuleCurrentData(p, module) {
+    const s = p.soil || {};
+    const l = p.leaves || {};
+    const last = getLastRiego(p);
+    let html = "";
+    if (module === "suelo") {
+      html = `
+        <p class="mb-1"><strong>Humedad:</strong> ${s.humidity || "—"}</p>
+        <p class="mb-1"><strong>Compactación:</strong> ${s.compaction || "—"}</p>
+        <p class="mb-1"><strong>Drenaje:</strong> ${s.drainage || "—"}</p>
+        <p class="mb-0"><strong>Hongos:</strong> ${s.fungi ? "Sí ⚠️" : "No"}</p>`;
+    } else if (module === "hojas") {
+      html = `
+        <p class="mb-1"><strong>Color:</strong> ${l.color || "—"}</p>
+        <p class="mb-1"><strong>Señales:</strong> ${formatLeavesFlags(l)}</p>
+        <p class="mb-0"><strong>Notas:</strong> ${l.notes || "—"}</p>`;
+    } else if (module === "estado") {
+      html = `
+        <p class="mb-1"><strong>Estado:</strong> ${p.generalState || "—"}</p>
+        <p class="mb-0"><strong>Comentarios:</strong> ${p.comments || "—"}</p>`;
+    } else if (module === "riego") {
+      const avg = computeAvgRiegoDays(p);
+      const days = daysSinceLastRiego(p);
+      html = last
+        ? `<p class="mb-1"><strong>Último riego:</strong> ${formatDateTime(last.date)}</p>
+           <p class="mb-1"><strong>Cantidad:</strong> ${last.amount || "—"} · ${last.method || "—"}</p>
+           ${last.notes ? `<p class="mb-1"><strong>Notas:</strong> ${last.notes}</p>` : ""}
+           <p class="mb-0"><strong>Total registros:</strong> ${(p.history || []).length}${avg ? ` · cada ~${Math.round(avg)} días` : ""}${days !== null ? ` · hace ${days} días` : ""}</p>`
+        : `<p class="mb-0 text-muted">Aún no hay riegos registrados para esta planta.</p>`;
+    }
+    return `<div class="module-current-data"><div class="module-current-data-label">Datos guardados</div>${html}</div>`;
+  }
+
+  function renderPlantCareSummary(p, options) {
+    options = options || {};
+    const s = p.soil || {};
+    const l = p.leaves || {};
+    const last = getLastRiego(p);
+    const riegoCount = (p.history || []).length;
+    const leafText = l.color ? `${l.color} · ${formatLeavesFlags(l)}` : formatLeavesFlags(l);
+    const rows = [
+      {
+        key: "riego",
+        icon: "💧",
+        label: "Riego",
+        value: last
+          ? `${formatDate(last.date)} · ${last.amount || "—"}${riegoCount > 1 ? ` (${riegoCount} registros)` : ""}`
+          : "Sin registros",
+        href: `riego.html?plant=${p.id}`,
+      },
+      {
+        key: "suelo",
+        icon: "🌍",
+        label: "Suelo",
+        value: `${s.humidity || "—"} · ${s.compaction || "—"} · Drenaje ${s.drainage || "—"}${s.fungi ? " · Hongos" : ""}`,
+        href: `suelo.html#plant-${p.id}`,
+      },
+      {
+        key: "hojas",
+        icon: "🍃",
+        label: "Hojas",
+        value: leafText,
+        href: `hojas.html#plant-${p.id}`,
+      },
+      {
+        key: "estado",
+        icon: "❤️",
+        label: "Estado",
+        value: p.comments ? `${p.generalState || "—"} — ${p.comments}` : p.generalState || "—",
+        href: `estado.html#plant-${p.id}`,
+      },
+    ];
+    return `
+      <div class="plant-care-summary">
+        ${rows
+          .map(
+            (r) => `
+          <div class="plant-care-row${options.highlight === r.key ? " plant-care-row--active" : ""}">
+            <span class="plant-care-label">${r.icon} ${r.label}</span>
+            <span class="plant-care-value">${r.value}</span>
+            <a href="${r.href}" class="plant-care-link">Ver</a>
+          </div>`,
+          )
+          .join("")}
+      </div>`;
+  }
+
   return {
     STORAGE_KEY,
     HERO_TIPS,
@@ -977,5 +1080,8 @@ window.Hydralia = (function () {
     sortPhotoGallery,
     computeCareStreak,
     getStreakMessage,
+    getLastRiego,
+    renderModuleCurrentData,
+    renderPlantCareSummary,
   };
 })();

@@ -6,7 +6,7 @@
         <h5 class="modal-title">Añadir planta</h5>
         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
       </div>
-      <form id="formAddPlant">
+      <form id="formAddPlant" class="d-flex flex-column flex-grow-1 overflow-hidden">
         <div class="modal-body">
           <div class="form-row">
             <div class="form-group col-md-6">
@@ -67,7 +67,7 @@
             <div class="form-group col-md-6"><label>Color</label><input name="leafColor" class="form-control" placeholder="Verde" /></div>
             <div class="form-group col-md-6"><label>Observaciones</label><input name="leafNotes" class="form-control" /></div>
           </div>
-          <div class="form-group">
+          <div class="form-group mb-0">
             <label>Estado general</label>
             <select name="generalState" class="form-control"><option>Excelente</option><option selected>Buena</option><option>Regular</option><option>Mala</option><option>Crítica</option></select>
           </div>
@@ -88,7 +88,7 @@
         <h5 class="modal-title">Registrar riego</h5>
         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
       </div>
-      <form id="formAddRiego">
+      <form id="formAddRiego" class="d-flex flex-column flex-grow-1 overflow-hidden">
         <div class="modal-body">
           <div class="form-group">
             <label>Planta</label>
@@ -106,7 +106,7 @@
             <label>Método</label>
             <input name="method" class="form-control" placeholder="Regadera, goteo..." />
           </div>
-          <div class="form-group">
+          <div class="form-group mb-0">
             <label>Observaciones</label>
             <textarea name="notes" class="form-control" rows="2"></textarea>
           </div>
@@ -146,7 +146,7 @@
         <h5 class="modal-title">Añadir foto a la galería</h5>
         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
       </div>
-      <form id="formAddGalleryPhoto">
+      <form id="formAddGalleryPhoto" class="d-flex flex-column flex-grow-1 overflow-hidden">
         <div class="modal-body">
           <input type="hidden" name="plantId" id="gallery-plant-id" />
           <div class="form-group">
@@ -173,7 +173,7 @@
 </div>
 
 <div class="modal fade" id="modalAuth" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header border-0 pb-0">
         <h5 class="modal-title" id="modalAuthTitle">Iniciar sesión</h5>
@@ -186,10 +186,10 @@
         </div>
         <ul class="nav nav-pills auth-tabs mb-3" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="auth-tab-login" data-toggle="pill" href="#auth-pane-login" role="tab">Entrar</a>
+            <a class="nav-link active" id="auth-tab-login" data-toggle="tab" href="#auth-pane-login" role="tab">Entrar</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="auth-tab-registro" data-toggle="pill" href="#auth-pane-registro" role="tab">Crear cuenta</a>
+            <a class="nav-link" id="auth-tab-registro" data-toggle="tab" href="#auth-pane-registro" role="tab">Crear cuenta</a>
           </li>
         </ul>
         <div id="auth-modal-error" class="alert alert-danger d-none" role="alert"></div>

@@ -56,8 +56,10 @@
       <div class="guest-empty hydralia-card text-center p-4">
         <div class="guest-empty-icon mb-2">🌱</div>
         <p class="text-muted mb-3">${message}</p>
-        <button type="button" class="btn btn-primary btn-sm" data-auth-open="login">Iniciar sesión</button>
-        <button type="button" class="btn btn-outline-primary btn-sm ml-1 ml-sm-2 mt-2 mt-sm-0" data-auth-open="registro">Crear cuenta</button>
+        <div class="guest-empty-actions">
+          <button type="button" class="btn btn-primary btn-sm" data-auth-open="login">Iniciar sesión</button>
+          <button type="button" class="btn btn-outline-primary btn-sm" data-auth-open="registro">Crear cuenta</button>
+        </div>
       </div>`);
   }
 
@@ -310,6 +312,7 @@
             ${options.showDelete ? `<button class="btn btn-sm btn-outline-danger btn-delete" data-id="${p.id}">Eliminar</button>` : ""}
           </div>`
         : "";
+      const careSummary = H.renderPlantCareSummary(p);
 
       $el.append(`
         <div class="card hydralia-card plant-card mb-4">
@@ -320,6 +323,7 @@
                 <h5 class="mb-1">${p.name} <small class="text-muted">${p.species || ""}</small></h5>
                 <p class="mb-1 small">${p.location || "—"} · Maceta ${p.potSize || "—"} · <span class="plant-state-inline ${stateClass}">${p.generalState || "—"}</span></p>
                 ${freqText ? `<p class="mb-1 small text-info">${freqText}</p>` : ""}
+                ${careSummary}
                 ${H.renderWellnessBars(p)}
                 ${options.showHappiness !== false && options.showGallery ? H.renderHappinessBlock(p) : ""}
                 ${tipHtml}
@@ -344,6 +348,7 @@
               ${H.renderWellnessRings(p)}
               ${options.showHappiness !== false ? H.renderHappinessBlock(p) : ""}
               ${freqText ? `<p class="mb-2 small text-info">${freqText}</p>` : ""}
+              ${careSummary}
               ${tipHtml}
               ${actions}
               ${galleryHtml}
@@ -829,7 +834,7 @@
         const name = plant ? plant.name : "Planta";
         const icons = { riego: "💧", fertilizacion: "🌱", poda: "✂️", maceta: "🪴", tratamiento: "💊" };
         $r.append(`
-          <div class="card hydralia-card mb-2 p-3 d-flex flex-wrap justify-content-between align-items-center">
+          <div class="card hydralia-card mb-2 p-3 reminder-card-row d-flex flex-wrap justify-content-between align-items-center">
             <div>
               <strong>${icons[rem.type] || "🔔"} ${rem.message || rem.type}</strong>
               <br><small class="text-muted">${name} · ${H.formatDateTime(rem.date)}</small>
@@ -907,6 +912,10 @@
     },
 
     riego: function () {
+      if (!userLoggedIn()) {
+        renderGuestBlock($(".app-main"), "Inicia sesión para ver y registrar riegos.");
+        return;
+      }
       const params = new URLSearchParams(location.search);
       const plantId = params.get("plant");
       const plants = H.loadPlants();
@@ -914,6 +923,22 @@
       const $alerts = $("#riego-alerts");
       $list.empty();
       if ($alerts.length) $alerts.empty();
+
+      if (plantId) {
+        const p = H.getPlantById(plantId);
+        if (p && $alerts.length) {
+          $alerts.append(`
+            <div class="card hydralia-card p-3 mb-3 module-plant-card--highlight">
+              <div class="d-flex justify-content-between align-items-start flex-wrap mb-2 card-head-row">
+                <h6 class="mb-0">Historial de ${p.name}</h6>
+                <a href="riego.html" class="btn btn-sm btn-outline-secondary ml-2">Ver todos</a>
+              </div>
+              ${H.renderModuleCurrentData(p, "riego")}
+              <a href="plantas.html" class="btn btn-sm btn-outline-primary mt-2">Ver ficha en Plantas</a>
+            </div>`);
+        }
+      }
+
       let allEvents = [];
       plants.forEach((p) => {
         (p.history || []).forEach((h) => {
@@ -929,9 +954,9 @@
       allEvents.forEach((h) => {
         const avg = H.computeAvgRiegoDays(H.getPlantById(h.plantId));
         $list.append(`
-          <div class="card hydralia-card mb-2 p-3">
-            <div class="d-flex justify-content-between">
-              <strong>${h.plantName}</strong>
+          <div class="card hydralia-card mb-2 p-3${plantId && h.plantId === plantId ? " module-plant-card--highlight" : ""}" id="riego-${h.plantId}-${h.date}">
+            <div class="d-flex justify-content-between flex-wrap">
+              <strong><a href="riego.html?plant=${h.plantId}" class="text-reset">${h.plantName}</a></strong>
               <span class="text-muted">${H.formatDateTime(h.date)}</span>
             </div>
             <p class="mb-0 small">${h.amount || "—"} · ${h.method || "—"}</p>
@@ -959,15 +984,27 @@
     },
 
     suelo: function () {
-      const plants = H.loadPlants();
       const $c = $("#suelo-content");
       $c.empty();
+      if (!userLoggedIn()) {
+        renderGuestBlock($c, "Inicia sesión para registrar el estado del suelo.");
+        return;
+      }
+      const plants = H.loadPlants();
+      if (!plants.length) {
+        $c.html('<p class="text-muted">No hay plantas. <a href="plantas.html">Añade una planta</a> primero.</p>');
+        return;
+      }
       plants.forEach((p) => {
         const s = p.soil || {};
         $c.append(`
-          <div class="card hydralia-card mb-3 p-4" data-plant="${p.id}">
-            <h5>${p.name}</h5>
-            <form class="form-suelo" data-id="${p.id}">
+          <div class="card hydralia-card mb-3 p-4 module-plant-card" id="plant-${p.id}" data-plant="${p.id}">
+            <div class="d-flex justify-content-between align-items-start flex-wrap mb-2 card-head-row">
+              <h5 class="mb-0">${p.name}</h5>
+              <a href="plantas.html" class="btn btn-sm btn-outline-secondary">Ver ficha</a>
+            </div>
+            ${H.renderModuleCurrentData(p, "suelo")}
+            <form class="form-suelo mt-3" data-id="${p.id}">
               <div class="form-row">
                 <div class="form-group col-md-3">
                   <label>Humedad</label>
@@ -1001,18 +1038,30 @@
     },
 
     hojas: function () {
-      const plants = H.loadPlants();
       const $c = $("#hojas-content");
       $c.empty();
+      if (!userLoggedIn()) {
+        renderGuestBlock($c, "Inicia sesión para registrar el estado de las hojas.");
+        return;
+      }
+      const plants = H.loadPlants();
+      if (!plants.length) {
+        $c.html('<p class="text-muted">No hay plantas. <a href="plantas.html">Añade una planta</a> primero.</p>');
+        return;
+      }
       plants.forEach((p) => {
         const l = p.leaves || {};
         $c.append(`
-          <div class="card hydralia-card mb-3 p-4">
-            <div class="d-flex flex-wrap">
+          <div class="card hydralia-card mb-3 p-4 module-plant-card" id="plant-${p.id}">
+            <div class="d-flex flex-wrap module-hojas-layout">
               <img src="${plantPhotoUrl(p.photo)}" class="plant-card-img mr-3" alt="${p.name}" />
               <div style="flex:1">
-                <h5>${p.name}</h5>
-                <form class="form-hojas" data-id="${p.id}">
+                <div class="d-flex justify-content-between align-items-start flex-wrap mb-2 card-head-row">
+                  <h5 class="mb-0">${p.name}</h5>
+                  <a href="plantas.html" class="btn btn-sm btn-outline-secondary">Ver ficha</a>
+                </div>
+                ${H.renderModuleCurrentData(p, "hojas")}
+                <form class="form-hojas mt-3" data-id="${p.id}">
                   <div class="form-group">
                     <label>Color dominante</label>
                     <input name="color" class="form-control" value="${l.color || ""}" />
@@ -1044,15 +1093,27 @@
     },
 
     estado: function () {
-      const plants = H.loadPlants();
       const $c = $("#estado-content");
       $c.empty();
+      if (!userLoggedIn()) {
+        renderGuestBlock($c, "Inicia sesión para evaluar el estado general.");
+        return;
+      }
+      const plants = H.loadPlants();
+      if (!plants.length) {
+        $c.html('<p class="text-muted">No hay plantas. <a href="plantas.html">Añade una planta</a> primero.</p>');
+        return;
+      }
       const states = ["Excelente", "Buena", "Regular", "Mala", "Crítica"];
       plants.forEach((p) => {
         $c.append(`
-          <div class="card hydralia-card mb-3 p-4">
-            <h5>${p.name}</h5>
+          <div class="card hydralia-card mb-3 p-4 module-plant-card" id="plant-${p.id}">
+            <div class="d-flex justify-content-between align-items-start flex-wrap mb-2 card-head-row">
+              <h5 class="mb-0">${p.name}</h5>
+              <a href="plantas.html" class="btn btn-sm btn-outline-secondary">Ver ficha</a>
+            </div>
             ${H.renderWellnessBars(p)}
+            ${H.renderModuleCurrentData(p, "estado")}
             <form class="form-estado mt-3" data-id="${p.id}">
               <div class="form-group">
                 <label>Estado general</label>
@@ -1278,6 +1339,7 @@
       };
       H.savePlants(plants);
       $(this).closest(".card").addClass("task-done");
+      setTimeout(() => initCurrentPage(), 400);
     }
   });
 
@@ -1299,6 +1361,7 @@
       };
       H.savePlants(plants);
       $(this).closest(".card").addClass("task-done");
+      setTimeout(() => initCurrentPage(), 400);
     }
   });
 
@@ -1316,6 +1379,7 @@
       p.wellness = w;
       H.savePlants(plants);
       $(this).closest(".card").addClass("task-done");
+      setTimeout(() => initCurrentPage(), 400);
     }
   });
 
@@ -1380,6 +1444,14 @@
     if (window.HydraliaLayout && HydraliaLayout.syncNavHeight) {
       HydraliaLayout.syncNavHeight();
     }
+  });
+
+  window.addEventListener("orientationchange", function () {
+    setTimeout(function () {
+      if (window.HydraliaLayout && HydraliaLayout.syncNavHeight) {
+        HydraliaLayout.syncNavHeight();
+      }
+    }, 100);
   });
 
   $(function () {
